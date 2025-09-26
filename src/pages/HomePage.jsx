@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import RateLimitedUI from "../components/RateLimitedUI";
 import api from "../lib/axios";
+import { parseDateTimeInput } from "../lib/utils";
 
 
 
@@ -28,12 +29,17 @@ const HomePage = () => {
 
     setCreateLoading(true);
     try {
+      // Parse datetime input into separate date, time, and timezone
+      const { date, time, timezone } = parseDateTimeInput(meetingDateTime);
+      
       await api.post("/notes", {
         title,
         content,
         email,
         phone,
-        meetingDateTime
+        meetingDate: date,
+        meetingTime: time,
+        meetingTimezone: timezone
       });
 
       toast.success("Note created successfully!");
@@ -133,6 +139,11 @@ const HomePage = () => {
                       value={meetingDateTime}
                       onChange={(e) => setMeetingDateTime(e.target.value)}
                     />
+                    <label className="label">
+                      <span className="label-text-alt text-base-content/60">
+                        Date, time, and timezone will be stored separately in the database
+                      </span>
+                    </label>
                   </div>
 
                   <div className="card-actions justify-end">
