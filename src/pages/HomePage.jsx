@@ -14,13 +14,14 @@ const HomePage = () => {
   const [content, setContent] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [meetingDateTime, setMeetingDateTime] = useState("");
   const [createLoading, setCreateLoading] = useState(false);
 
 
   const handleCreateNote = async (e) => {
     e.preventDefault();
 
-    if (!title.trim() || !content.trim() || !email.trim() || !phone.trim()) {
+    if (!title.trim() || !content.trim() || !email.trim() || !phone.trim() || !meetingDateTime.trim()) {
       toast.error("All fields are required");
       return;
     }
@@ -31,7 +32,8 @@ const HomePage = () => {
         title,
         content,
         email,
-        phone
+        phone,
+        meetingDateTime
       });
 
       toast.success("Note created successfully!");
@@ -41,6 +43,7 @@ const HomePage = () => {
       setContent("");
       setEmail("");
       setPhone("");
+      setMeetingDateTime("");
     } catch (error) {
       console.log("Error creating note", error);
       if (error.response.status === 429) {
@@ -117,6 +120,18 @@ const HomePage = () => {
                       className="input input-bordered"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="form-control mb-4">
+                    <label className="label">
+                      <span className="label-text">Meeting Date & Time</span>
+                    </label>
+                    <input
+                      type="datetime-local"
+                      className="input input-bordered"
+                      value={meetingDateTime}
+                      onChange={(e) => setMeetingDateTime(e.target.value)}
                     />
                   </div>
 
