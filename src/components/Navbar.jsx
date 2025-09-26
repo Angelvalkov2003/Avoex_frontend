@@ -17,7 +17,7 @@ const Navbar = () => {
                 <div className='flex items-center gap-4'>
                     <button onClick={scrollToCreateForm} className="btn btn-primary">
                         <PlusIcon className="size-5"/>
-                        <span>New note</span>
+                        <span>Book Consultation</span>
                     </button>
                 </div>
             </div>
