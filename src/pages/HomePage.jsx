@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import RateLimitedUI from "../components/RateLimitedUI";
 import api from "../lib/axios";
-import { parseDateTimeInput } from "../lib/utils";
+import { parseDateTimeInput, convertToBulgarianTime } from "../lib/utils";
 
 
 
@@ -32,6 +32,9 @@ const HomePage = () => {
       // Parse datetime input into separate date, time, and timezone
       const { date, time, timezone } = parseDateTimeInput(meetingDateTime);
       
+      // Calculate Bulgarian time
+      const bgTime = convertToBulgarianTime(meetingDateTime);
+      
       await api.post("/notes", {
         title,
         content,
@@ -39,7 +42,8 @@ const HomePage = () => {
         phone,
         meetingDate: date,
         meetingTime: time,
-        meetingTimezone: timezone
+        meetingTimezone: timezone,
+        BGtime: bgTime
       });
 
       toast.success("Note created successfully!");
@@ -141,7 +145,7 @@ const HomePage = () => {
                     />
                     <label className="label">
                       <span className="label-text-alt text-base-content/60">
-                        Date, time, and timezone will be stored separately in the database
+                        Date, time, timezone, and Bulgarian time will be stored separately in the database
                       </span>
                     </label>
                   </div>

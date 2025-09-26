@@ -11,6 +11,32 @@ export function getUserTimezone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
 
+// Convert time to Bulgarian timezone (Europe/Sofia)
+export function convertToBulgarianTime(dateTimeString) {
+  if (!dateTimeString) return "";
+
+  const date = new Date(dateTimeString);
+
+  // Convert to Bulgarian timezone
+  const bulgarianTime = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Sofia",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(date);
+
+  const year = bulgarianTime.find((part) => part.type === "year").value;
+  const month = bulgarianTime.find((part) => part.type === "month").value;
+  const day = bulgarianTime.find((part) => part.type === "day").value;
+  const hour = bulgarianTime.find((part) => part.type === "hour").value;
+  const minute = bulgarianTime.find((part) => part.type === "minute").value;
+
+  return `${year}-${month}-${day} ${hour}:${minute}`;
+}
+
 // Parse datetime-local input into separate date, time, and timezone
 export function parseDateTimeInput(dateTimeString) {
   if (!dateTimeString) return { date: "", time: "", timezone: "" };
