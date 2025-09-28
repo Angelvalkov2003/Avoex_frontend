@@ -11,6 +11,45 @@ export function getUserTimezone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
 
+// Detect if user is from US based on timezone
+export function isUserFromUS() {
+  const timezone = getUserTimezone();
+  return (
+    timezone.includes("America/") ||
+    timezone.includes("US/") ||
+    timezone.includes("Pacific/") ||
+    timezone.includes("Mountain/") ||
+    timezone.includes("Central/") ||
+    timezone.includes("Eastern/")
+  );
+}
+
+// Generate time slots for whole hours from 9 AM to 10 PM
+export function generateTimeSlots() {
+  const slots = [];
+  const isUS = isUserFromUS();
+
+  for (let hour = 9; hour <= 22; hour++) {
+    const timeString = `${hour.toString().padStart(2, "0")}:00`;
+
+    // Format time based on user location
+    const displayTime = new Date(`2000-01-01T${timeString}`).toLocaleTimeString(
+      isUS ? "en-US" : "en-GB",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: isUS, // 12-hour format for US, 24-hour for others
+      }
+    );
+
+    slots.push({
+      value: timeString,
+      label: displayTime,
+    });
+  }
+  return slots;
+}
+
 // Convert time to Bulgarian timezone (Europe/Sofia) and return separate date and time
 export function convertToBulgarianTime(dateTimeString) {
   if (!dateTimeString) return { bgDate: "", bgTime: "" };
@@ -40,20 +79,15 @@ export function convertToBulgarianTime(dateTimeString) {
   };
 }
 
-// Parse datetime-local input into combined date/time and timezone
-export function parseDateTimeInput(dateTimeString) {
-  if (!dateTimeString) return { clientsDate: "", clientsTimeZone: "" };
+// Parse separate date and time inputs into combined date/time and timezone
+export function parseDateTimeInput(selectedDate, selectedTime) {
+  if (!selectedDate || !selectedTime)
+    return { clientsDate: "", clientsTimeZone: "" };
 
-  const date = new Date(dateTimeString);
   const timezone = getUserTimezone();
 
   // Format as combined date and time string (YYYY-MM-DD HH:MM)
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const clientsDate = `${year}-${month}-${day} ${hours}:${minutes}`;
+  const clientsDate = `${selectedDate} ${selectedTime}`;
 
   return {
     clientsDate: clientsDate,

@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import RateLimitedUI from "../components/RateLimitedUI";
 import api from "../lib/axios";
-import { parseDateTimeInput, convertToBulgarianTime } from "../lib/utils";
+import { parseDateTimeInput, convertToBulgarianTime, generateTimeSlots, isUserFromUS, getUserTimezone } from "../lib/utils";
 
 
 
@@ -14,25 +14,30 @@ const HomePage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [email, setEmail] = useState("");
-  const [meetingDateTime, setMeetingDateTime] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
   const [createLoading, setCreateLoading] = useState(false);
+  
+  // Generate time slots
+  const timeSlots = generateTimeSlots();
 
 
   const handleCreateNote = async (e) => {
     e.preventDefault();
 
-    if (!title.trim() || !content.trim() || !email.trim() || !meetingDateTime.trim()) {
+    if (!title.trim() || !content.trim() || !email.trim() || !selectedDate.trim() || !selectedTime.trim()) {
       toast.error("All fields are required");
       return;
     }
 
     setCreateLoading(true);
     try {
-      // Parse datetime input into combined date/time and timezone
-      const { clientsDate, clientsTimeZone } = parseDateTimeInput(meetingDateTime);
+      // Parse separate date and time inputs into combined date/time and timezone
+      const { clientsDate, clientsTimeZone } = parseDateTimeInput(selectedDate, selectedTime);
       
       // Calculate Bulgarian time
-      const { bgDate, bgTime } = convertToBulgarianTime(meetingDateTime);
+      const dateTimeString = `${selectedDate}T${selectedTime}`;
+      const { bgDate, bgTime } = convertToBulgarianTime(dateTimeString);
       
       await api.post("/notes", {
         title,
@@ -50,7 +55,8 @@ const HomePage = () => {
       setTitle("");
       setContent("");
       setEmail("");
-      setMeetingDateTime("");
+      setSelectedDate("");
+      setSelectedTime("");
     } catch (error) {
       console.log("Error creating note", error);
       if (error.response.status === 429) {
@@ -159,37 +165,87 @@ const HomePage = () => {
                       />
                     </div>
 
-                    {/* Date & Time field */}
-                    <div
-  className="form-control group"
-  onClick={() => document.getElementById("meetingDateTime").showPicker?.()}
->
-  <label className="label">
-    <span className="label-text text-lg font-semibold text-gray-700 flex items-center gap-2">
-      <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-      Consultation Date & Time
-    </span>
-  </label>
+                     {/* Date & Time field */}
+                     <div className="form-control group">
+                       <label className="label">
+                         <span className="label-text text-lg font-semibold text-gray-700 flex items-center gap-2">
+                           <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                           </svg>
+                           Consultation Date & Time
+                         </span>
+                       </label>
+                       
+                       <div className="space-y-4">
+                         {/* Date input */}
+                         <div 
+                           className="relative cursor-pointer"
+                           onClick={() => {
+                             const dateInput = document.getElementById('date-input');
+                             if (dateInput) {
+                               dateInput.showPicker();
+                             }
+                           }}
+                         >
+                           <input
+                             id="date-input"
+                             type="date"
+                             className="input input-bordered w-full h-14 text-lg transition-all duration-300 focus:scale-[1.02] focus:shadow-lg border-2 focus:border-indigo-500 bg-white cursor-pointer"
+                             value={selectedDate}
+                             onChange={(e) => {
+                               setSelectedDate(e.target.value);
+                               // Reset time when date changes
+                               setSelectedTime("");
+                             }}
+                             min={new Date().toISOString().split('T')[0]}
+                             placeholder="Select date"
+                           />
+                           
+                           {/* Custom calendar icon */}
+                           <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                             <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                             </svg>
+                           </div>
+                         </div>
+                         
+                         {/* Time dropdown - only show if date is selected */}
+                         {selectedDate && (
+                           <div className="relative animate-fadeIn">
+                             <select
+                               className="select select-bordered w-full h-14 text-lg transition-all duration-300 focus:scale-[1.02] focus:shadow-lg border-2 focus:border-indigo-500 bg-white appearance-none cursor-pointer"
+                               value={selectedTime}
+                               onChange={(e) => setSelectedTime(e.target.value)}
+                             >
+                               <option value="">Select time</option>
+                               {timeSlots.map((slot) => (
+                                 <option key={slot.value} value={slot.value}>
+                                   {slot.label}
+                                 </option>
+                               ))}
+                             </select>
+                             
+                             {/* Custom dropdown arrow */}
+                             <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                               <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                               </svg>
+                             </div>
+                           </div>
+                         )}
+                       </div>
+                       
+                       
 
-  <input
-    id="meetingDateTime"
-    type="datetime-local"
-    className="input input-bordered w-full h-14 text-lg transition-all duration-300 focus:scale-[1.02] focus:shadow-lg border-2 focus:border-indigo-500 bg-white"
-    value={meetingDateTime}
-    onChange={(e) => setMeetingDateTime(e.target.value)}
-  />
-
-  <label className="label">
-    <span className="label-text-alt text-sm text-gray-500 flex items-center gap-1">
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      Enter the information in your time zone.
-    </span>
-  </label>
-</div>
+                       <label className="label">
+                         <span className="label-text-alt text-sm text-gray-500 flex items-center gap-1">
+                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                           </svg>
+                           Times are displayed in your local timezone
+                         </span>
+                       </label>
+                     </div>
 
                     {/* Submit button */}
                     <div className="pt-6">
