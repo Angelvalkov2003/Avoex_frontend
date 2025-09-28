@@ -11,9 +11,9 @@ export function getUserTimezone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
 
-// Convert time to Bulgarian timezone (Europe/Sofia)
+// Convert time to Bulgarian timezone (Europe/Sofia) and return separate date and time
 export function convertToBulgarianTime(dateTimeString) {
-  if (!dateTimeString) return "";
+  if (!dateTimeString) return { bgDate: "", bgTime: "" };
 
   const date = new Date(dateTimeString);
 
@@ -34,31 +34,30 @@ export function convertToBulgarianTime(dateTimeString) {
   const hour = bulgarianTime.find((part) => part.type === "hour").value;
   const minute = bulgarianTime.find((part) => part.type === "minute").value;
 
-  return `${year}-${month}-${day} ${hour}:${minute}`;
+  return {
+    bgDate: `${year}-${month}-${day}`,
+    bgTime: `${hour}:${minute}`,
+  };
 }
 
-// Parse datetime-local input into separate date, time, and timezone
+// Parse datetime-local input into combined date/time and timezone
 export function parseDateTimeInput(dateTimeString) {
-  if (!dateTimeString) return { date: "", time: "", timezone: "" };
+  if (!dateTimeString) return { clientsDate: "", clientsTimeZone: "" };
 
   const date = new Date(dateTimeString);
   const timezone = getUserTimezone();
 
-  // Format date as YYYY-MM-DD
+  // Format as combined date and time string (YYYY-MM-DD HH:MM)
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
-  const dateStr = `${year}-${month}-${day}`;
-
-  // Format time as HH:MM
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");
-  const timeStr = `${hours}:${minutes}`;
+  const clientsDate = `${year}-${month}-${day} ${hours}:${minutes}`;
 
   return {
-    date: dateStr,
-    time: timeStr,
-    timezone: timezone,
+    clientsDate: clientsDate,
+    clientsTimeZone: timezone,
   };
 }
 
