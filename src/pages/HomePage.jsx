@@ -200,13 +200,6 @@ const HomePage = () => {
                              min={new Date().toISOString().split('T')[0]}
                              placeholder="Select date"
                            />
-                           
-                           {/* Custom calendar icon */}
-                           <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                             <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                             </svg>
-                           </div>
                          </div>
                          
                          {/* Custom Time Picker - only show if date is selected */}
@@ -223,7 +216,7 @@ const HomePage = () => {
                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 max-h-64 overflow-y-auto custom-scrollbar">
                                  {timeSlots.map((slot) => {
                                    const isSelected = selectedTime === slot.value;
-                                   const isMorning = parseInt(slot.value.split(':')[0]) < 12;
+                                   const isMorning = parseInt(slot.value.split(':')[0]) >= 8 && parseInt(slot.value.split(':')[0]) < 12;
                                    const isAfternoon = parseInt(slot.value.split(':')[0]) >= 12 && parseInt(slot.value.split(':')[0]) < 18;
                                    const isEvening = parseInt(slot.value.split(':')[0]) >= 18;
                                    
