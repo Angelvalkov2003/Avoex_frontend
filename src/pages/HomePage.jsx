@@ -209,27 +209,80 @@ const HomePage = () => {
                            </div>
                          </div>
                          
-                         {/* Time dropdown - only show if date is selected */}
+                         {/* Custom Time Picker - only show if date is selected */}
                          {selectedDate && (
-                           <div className="relative animate-fadeIn">
-                             <select
-                               className="select select-bordered w-full h-14 text-lg transition-all duration-300 focus:scale-[1.02] focus:shadow-lg border-2 focus:border-indigo-500 bg-white appearance-none cursor-pointer"
-                               value={selectedTime}
-                               onChange={(e) => setSelectedTime(e.target.value)}
-                             >
-                               <option value="">Select time</option>
-                               {timeSlots.map((slot) => (
-                                 <option key={slot.value} value={slot.value}>
-                                   {slot.label}
-                                 </option>
-                               ))}
-                             </select>
-                             
-                             {/* Custom dropdown arrow */}
-                             <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                               <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                           <div className="animate-fadeIn">
+                             <div className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+                               <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                </svg>
+                               Choose your preferred time
+                             </div>
+                             
+                             <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-4 border border-gray-200">
+                               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 max-h-64 overflow-y-auto custom-scrollbar">
+                                 {timeSlots.map((slot) => {
+                                   const isSelected = selectedTime === slot.value;
+                                   const isMorning = parseInt(slot.value.split(':')[0]) < 12;
+                                   const isAfternoon = parseInt(slot.value.split(':')[0]) >= 12 && parseInt(slot.value.split(':')[0]) < 18;
+                                   const isEvening = parseInt(slot.value.split(':')[0]) >= 18;
+                                   
+                                   return (
+                                     <button
+                                       key={slot.value}
+                                       type="button"
+                                       onClick={() => setSelectedTime(slot.value)}
+                                       className={`
+                                         relative p-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 active:scale-95
+                                         ${isSelected 
+                                           ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg ring-2 ring-indigo-200' 
+                                           : 'bg-white hover:bg-indigo-50 text-gray-700 hover:text-indigo-700 shadow-sm hover:shadow-md border border-gray-200 hover:border-indigo-300'
+                                         }
+                                       `}
+                                     >
+                                       <div className="flex flex-col items-center gap-1">
+                                         <span className="text-lg font-semibold">{slot.label}</span>
+                                         <div className="flex items-center gap-1">
+                                           <div className={`
+                                             w-2 h-2 rounded-full
+                                             ${isMorning ? 'bg-blue-400' : isAfternoon ? 'bg-yellow-400' : 'bg-purple-400'}
+                                           `}></div>
+                                           <span className="text-xs opacity-75">
+                                             {isMorning ? 'Morning' : isAfternoon ? 'Afternoon' : 'Evening'}
+                                           </span>
+                                         </div>
+                                       </div>
+                                       
+                                       {/* Selection indicator */}
+                                       {isSelected && (
+                                         <div className="absolute -top-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-lg">
+                                           <svg className="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                           </svg>
+                                         </div>
+                                       )}
+                                     </button>
+                                   );
+                                 })}
+                               </div>
+                               
+                               {/* Time period legend */}
+                               <div className="mt-4 pt-4 border-t border-gray-200">
+                                 <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-gray-500">
+                                   <div className="flex items-center gap-2">
+                                     <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
+                                     <span>Morning</span>
+                                   </div>
+                                   <div className="flex items-center gap-2">
+                                     <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                                     <span>Afternoon</span>
+                                   </div>
+                                   <div className="flex items-center gap-2">
+                                     <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
+                                     <span>Evening</span>
+                                   </div>
+                                 </div>
+                               </div>
                              </div>
                            </div>
                          )}
