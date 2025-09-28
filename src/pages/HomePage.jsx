@@ -11,21 +11,19 @@ const HomePage = () => {
   const [isRateLimited, setRateLimited] = useState(false);
   
   // Create form states
-  const [title, setTitle] = useState("");
+  const [client, setClient] = useState("");
   const [content, setContent] = useState("");
   const [email, setEmail] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [createLoading, setCreateLoading] = useState(false);
-  
   // Generate time slots
   const timeSlots = generateTimeSlots();
 
-
-  const handleCreateNote = async (e) => {
+  const handleCreateMeeting = async (e) => {
     e.preventDefault();
 
-    if (!title.trim() || !content.trim() || !email.trim() || !selectedDate.trim() || !selectedTime.trim()) {
+    if (!client.trim() || !content.trim() || !email.trim() || !selectedDate.trim() || !selectedTime.trim()) {
       toast.error("All fields are required");
       return;
     }
@@ -39,8 +37,8 @@ const HomePage = () => {
       const dateTimeString = `${selectedDate}T${selectedTime}`;
       const { bgDate, bgTime } = convertToBulgarianTime(dateTimeString);
       
-      await api.post("/notes", {
-        title,
+      await api.post("/meetings", {
+        client,
         content,
         email,
         ClientsDate: clientsDate,
@@ -52,17 +50,22 @@ const HomePage = () => {
       toast.success("Consultation booked successfully!");
       
       // Reset form
-      setTitle("");
+      setClient("");
       setContent("");
       setEmail("");
       setSelectedDate("");
       setSelectedTime("");
     } catch (error) {
-      console.log("Error creating note", error);
+      console.log("Error creating meeting", error);
       if (error.response.status === 429) {
         toast.error("Slow down! You're booking consultations too fast", {
           duration: 4000,
           icon: "❌",
+        });
+      } else if (error.response.status === 409) {
+        toast.error("This time slot is already booked. Please choose a different time.", {
+          duration: 5000,
+          icon: "⏰",
         });
       } else {
         toast.error("Failed to book consultation");
@@ -108,7 +111,7 @@ const HomePage = () => {
                 </div>
 
                 <div className="p-8">
-                  <form onSubmit={handleCreateNote} className="space-y-6">
+                  <form onSubmit={handleCreateMeeting} className="space-y-6">
                     {/* Name field */}
                     <div className="form-control group">
                       <label className="label">
@@ -119,13 +122,13 @@ const HomePage = () => {
                           Your Name
                         </span>
                       </label>
-                      <input
-                        type="text"
-                        placeholder="Enter your full name..."
-                        className="input input-bordered w-full h-14 text-lg transition-all duration-300 focus:scale-[1.02] focus:shadow-lg border-2 focus:border-blue-500 bg-white/80 backdrop-blur-sm"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                      />
+                        <input
+                          type="text"
+                          placeholder="Enter your full name..."
+                          className="input input-bordered w-full h-14 text-lg transition-all duration-300 focus:scale-[1.02] focus:shadow-lg border-2 focus:border-blue-500 bg-white/80 backdrop-blur-sm"
+                          value={client}
+                          onChange={(e) => setClient(e.target.value)}
+                        />
                     </div>
 
                     {/* Project Description field */}
