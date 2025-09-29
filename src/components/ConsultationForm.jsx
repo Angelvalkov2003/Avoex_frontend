@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import api from "../lib/axios";
-import { parseDateTimeInput, convertToBulgarianTime, generateTimeSlots, isUserFromUS, getUserTimezone } from "../lib/utils";
+import { parseDateTimeInput, convertToBulgarianTime, convertFromBulgarianTime, generateTimeSlots, isUserFromUS, getUserTimezone } from "../lib/utils";
 
 const ConsultationForm = () => {
   // Create form states
@@ -11,8 +11,47 @@ const ConsultationForm = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [createLoading, setCreateLoading] = useState(false);
+  const [bookedSlots, setBookedSlots] = useState([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
   // Generate time slots
   const timeSlots = generateTimeSlots();
+
+  // Function to load booked slots for a specific date
+  const loadBookedSlots = async (date) => {
+    if (!date) return;
+    
+    setLoadingSlots(true);
+    try {
+      const response = await api.get(`/meetings/booked-slots/${date}`);
+      const { bookedSlots } = response.data;
+      
+      console.log("📅 Заети часове в българско време:", bookedSlots);
+      
+      // Convert each booked slot from Bulgarian time to client time
+      const clientTimeSlots = bookedSlots.map(bgTime => {
+        const { clientDate, clientTime } = convertFromBulgarianTime(date, bgTime);
+        console.log(`🕐 Българско време: ${bgTime} -> Клиентско време: ${clientTime}`);
+        return {
+          bgTime,
+          clientTime,
+          clientDate
+        };
+      });
+      
+      console.log("🌍 Всички конвертирани часове:", clientTimeSlots);
+      
+      // Store both Bulgarian and client times for comparison
+      setBookedSlots({
+        bgTimes: bookedSlots,
+        clientTimes: clientTimeSlots.map(slot => slot.clientTime)
+      });
+    } catch (error) {
+      console.error("Error loading booked slots:", error);
+      toast.error("Failed to load available time slots");
+    } finally {
+      setLoadingSlots(false);
+    }
+  };
 
   const handleCreateMeeting = async (e) => {
     e.preventDefault();
@@ -186,6 +225,8 @@ const ConsultationForm = () => {
                          setSelectedDate(e.target.value);
                          // Reset time when date changes
                          setSelectedTime("");
+                         // Load booked slots for the selected date
+                         loadBookedSlots(e.target.value);
                        }}
                        min={new Date().toISOString().split('T')[0]}
                        placeholder="Select date"
@@ -200,12 +241,23 @@ const ConsultationForm = () => {
                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                          </svg>
                          Choose your preferred time
+                         {loadingSlots && (
+                           <span className="loading loading-spinner loading-sm text-indigo-500"></span>
+                         )}
                        </div>
                        
                        <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-4 border border-gray-200">
                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 max-h-64 overflow-y-auto custom-scrollbar">
                            {timeSlots.map((slot) => {
                              const isSelected = selectedTime === slot.value;
+                             // Check if this time slot is booked in client time
+                             const isBooked = bookedSlots.clientTimes && bookedSlots.clientTimes.includes(slot.value);
+                             
+                             // Debug: log if this slot is booked
+                             if (isBooked) {
+                               console.log(`🔴 Зает час в клиентско време: ${slot.value}`);
+                             }
+                             
                              const isMorning = parseInt(slot.value.split(':')[0]) >= 8 && parseInt(slot.value.split(':')[0]) < 12;
                              const isAfternoon = parseInt(slot.value.split(':')[0]) >= 12 && parseInt(slot.value.split(':')[0]) < 18;
                              const isEvening = parseInt(slot.value.split(':')[0]) >= 18;
@@ -214,25 +266,37 @@ const ConsultationForm = () => {
                                <button
                                  key={slot.value}
                                  type="button"
-                                 onClick={() => setSelectedTime(slot.value)}
+                                 onClick={() => !isBooked && setSelectedTime(slot.value)}
+                                 disabled={isBooked}
                                  className={`
                                    relative p-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 active:scale-95
-                                   ${isSelected 
-                                     ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg ring-2 ring-indigo-200' 
-                                     : 'bg-white hover:bg-indigo-50 text-gray-700 hover:text-indigo-700 shadow-sm hover:shadow-md border border-gray-200 hover:border-indigo-300'
+                                   ${isBooked
+                                     ? 'bg-gray-200 text-gray-400 cursor-not-allowed opacity-50'
+                                     : isSelected 
+                                       ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg ring-2 ring-indigo-200' 
+                                       : 'bg-white hover:bg-indigo-50 text-gray-700 hover:text-indigo-700 shadow-sm hover:shadow-md border border-gray-200 hover:border-indigo-300'
                                    }
                                  `}
                                >
                                  <div className="flex flex-col items-center gap-1">
                                    <span className="text-lg font-semibold">{slot.label}</span>
                                    <div className="flex items-center gap-1">
-                                     <div className={`
-                                       w-2 h-2 rounded-full
-                                       ${isMorning ? 'bg-blue-400' : isAfternoon ? 'bg-yellow-400' : 'bg-purple-400'}
-                                     `}></div>
-                                     <span className="text-xs opacity-75">
-                                       {isMorning ? 'Morning' : isAfternoon ? 'Afternoon' : 'Evening'}
-                                     </span>
+                                     {isBooked ? (
+                                       <>
+                                         <div className="w-2 h-2 rounded-full bg-red-400"></div>
+                                         <span className="text-xs opacity-75">Booked</span>
+                                       </>
+                                     ) : (
+                                       <>
+                                         <div className={`
+                                           w-2 h-2 rounded-full
+                                           ${isMorning ? 'bg-blue-400' : isAfternoon ? 'bg-yellow-400' : 'bg-purple-400'}
+                                         `}></div>
+                                         <span className="text-xs opacity-75">
+                                           {isMorning ? 'Morning' : isAfternoon ? 'Afternoon' : 'Evening'}
+                                         </span>
+                                       </>
+                                     )}
                                    </div>
                                  </div>
                                  
@@ -263,6 +327,10 @@ const ConsultationForm = () => {
                              <div className="flex items-center gap-2">
                                <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
                                <span>Evening</span>
+                             </div>
+                             <div className="flex items-center gap-2">
+                               <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                               <span>Booked</span>
                              </div>
                            </div>
                          </div>

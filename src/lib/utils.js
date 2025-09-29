@@ -79,6 +79,83 @@ export function convertToBulgarianTime(dateTimeString) {
   };
 }
 
+// Convert Bulgarian time to client's timezone and return separate date and time
+export function convertFromBulgarianTime(bgDate, bgTime) {
+  if (!bgDate || !bgTime) return { clientDate: "", clientTime: "" };
+
+  // Get the client's timezone
+  const clientTimezone = getUserTimezone();
+  console.log("🌍 Клиентска часова зона:", clientTimezone);
+
+  // Create a date object from the Bulgarian time
+  const bulgarianDateTimeString = `${bgDate}T${bgTime}`;
+  console.log("🇧🇬 Българско време string:", bulgarianDateTimeString);
+
+  // Create a date object and treat it as if it's in Sofia timezone
+  // We need to manually create a date that represents Sofia time correctly
+  const [year, month, day] = bgDate.split("-").map(Number);
+  const [hour, minute] = bgTime.split(":").map(Number);
+
+  // Create a date object in Sofia timezone
+  // We'll use a trick: create the date in UTC and then adjust
+  const sofiaDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+
+  // Get the timezone offset for Sofia at this specific date
+  const sofiaOffset = new Intl.DateTimeFormat("en", {
+    timeZone: "Europe/Sofia",
+    timeZoneName: "longOffset",
+  }).formatToParts(sofiaDate);
+
+  // Extract the offset from the timezone name
+  const offsetString =
+    sofiaOffset.find((p) => p.type === "timeZoneName")?.value || "+02:00";
+  const offsetMatch = offsetString.match(/([+-])(\d{2}):(\d{2})/);
+
+  if (!offsetMatch) {
+    console.error("Could not parse Sofia timezone offset");
+    return { clientDate: "", clientTime: "" };
+  }
+
+  const [, sign, offsetHours, offsetMinutes] = offsetMatch;
+  const totalOffsetMs =
+    (parseInt(offsetHours) * 60 + parseInt(offsetMinutes)) * 60 * 1000;
+  const sofiaOffsetMs = sign === "+" ? totalOffsetMs : -totalOffsetMs;
+
+  console.log("⏰ Sofia offset:", offsetString, "ms:", sofiaOffsetMs);
+
+  // Adjust the date to represent the correct UTC time
+  const adjustedDate = new Date(sofiaDate.getTime() - sofiaOffsetMs);
+
+  console.log("📅 Sofia дата:", sofiaDate);
+  console.log("📅 UTC дата:", adjustedDate);
+
+  // Convert to client's timezone
+  const clientTime = new Intl.DateTimeFormat("en-CA", {
+    timeZone: clientTimezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(adjustedDate);
+
+  const resultYear = clientTime.find((part) => part.type === "year").value;
+  const resultMonth = clientTime.find((part) => part.type === "month").value;
+  const resultDay = clientTime.find((part) => part.type === "day").value;
+  const resultHour = clientTime.find((part) => part.type === "hour").value;
+  const resultMinute = clientTime.find((part) => part.type === "minute").value;
+
+  const result = {
+    clientDate: `${resultYear}-${resultMonth}-${resultDay}`,
+    clientTime: `${resultHour}:${resultMinute}`,
+  };
+
+  console.log("🎯 Резултат:", result);
+
+  return result;
+}
+
 // Parse separate date and time inputs into combined date/time and timezone
 export function parseDateTimeInput(selectedDate, selectedTime) {
   if (!selectedDate || !selectedTime)
