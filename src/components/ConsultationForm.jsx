@@ -25,20 +25,15 @@ const ConsultationForm = () => {
       const response = await api.get(`/meetings/booked-slots/${date}`);
       const { bookedSlots } = response.data;
       
-      console.log("📅 Заети часове в българско време:", bookedSlots);
-      
       // Convert each booked slot from Bulgarian time to client time
       const clientTimeSlots = bookedSlots.map(bgTime => {
         const { clientDate, clientTime } = convertFromBulgarianTime(date, bgTime);
-        console.log(`🕐 Българско време: ${bgTime} -> Клиентско време: ${clientTime}`);
         return {
           bgTime,
           clientTime,
           clientDate
         };
       });
-      
-      console.log("🌍 Всички конвертирани часове:", clientTimeSlots);
       
       // Store both Bulgarian and client times for comparison
       setBookedSlots({
@@ -252,11 +247,6 @@ const ConsultationForm = () => {
                              const isSelected = selectedTime === slot.value;
                              // Check if this time slot is booked in client time
                              const isBooked = bookedSlots.clientTimes && bookedSlots.clientTimes.includes(slot.value);
-                             
-                             // Debug: log if this slot is booked
-                             if (isBooked) {
-                               console.log(`🔴 Зает час в клиентско време: ${slot.value}`);
-                             }
                              
                              const isMorning = parseInt(slot.value.split(':')[0]) >= 8 && parseInt(slot.value.split(':')[0]) < 12;
                              const isAfternoon = parseInt(slot.value.split(':')[0]) >= 12 && parseInt(slot.value.split(':')[0]) < 18;

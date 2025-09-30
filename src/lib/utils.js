@@ -85,11 +85,9 @@ export function convertFromBulgarianTime(bgDate, bgTime) {
 
   // Get the client's timezone
   const clientTimezone = getUserTimezone();
-  console.log("🌍 Клиентска часова зона:", clientTimezone);
 
   // Create a date object from the Bulgarian time
   const bulgarianDateTimeString = `${bgDate}T${bgTime}`;
-  console.log("🇧🇬 Българско време string:", bulgarianDateTimeString);
 
   // Create a date object and treat it as if it's in Sofia timezone
   // We need to manually create a date that represents Sofia time correctly
@@ -121,13 +119,8 @@ export function convertFromBulgarianTime(bgDate, bgTime) {
     (parseInt(offsetHours) * 60 + parseInt(offsetMinutes)) * 60 * 1000;
   const sofiaOffsetMs = sign === "+" ? totalOffsetMs : -totalOffsetMs;
 
-  console.log("⏰ Sofia offset:", offsetString, "ms:", sofiaOffsetMs);
-
   // Adjust the date to represent the correct UTC time
   const adjustedDate = new Date(sofiaDate.getTime() - sofiaOffsetMs);
-
-  console.log("📅 Sofia дата:", sofiaDate);
-  console.log("📅 UTC дата:", adjustedDate);
 
   // Convert to client's timezone
   const clientTime = new Intl.DateTimeFormat("en-CA", {
@@ -150,8 +143,6 @@ export function convertFromBulgarianTime(bgDate, bgTime) {
     clientDate: `${resultYear}-${resultMonth}-${resultDay}`,
     clientTime: `${resultHour}:${resultMinute}`,
   };
-
-  console.log("🎯 Резултат:", result);
 
   return result;
 }
