@@ -242,11 +242,18 @@ const ConsultationForm = () => {
                        </div>
                        
                        <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-4 border border-gray-200">
-                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 max-h-64 overflow-y-auto custom-scrollbar">
+                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                            {timeSlots.map((slot) => {
                              const isSelected = selectedTime === slot.value;
                              // Check if this time slot is booked in client time
                              const isBooked = bookedSlots.clientTimes && bookedSlots.clientTimes.includes(slot.value);
+                             
+                             // Check if this time slot is in the past (current hour + next 2 hours) - only for today
+                             const now = new Date();
+                             const today = now.toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+                             const currentHour = now.getHours();
+                             const slotHour = parseInt(slot.value.split(':')[0]);
+                             const isPastTime = selectedDate === today && slotHour <= currentHour + 2;
                              
                              const isMorning = parseInt(slot.value.split(':')[0]) >= 8 && parseInt(slot.value.split(':')[0]) < 12;
                              const isAfternoon = parseInt(slot.value.split(':')[0]) >= 12 && parseInt(slot.value.split(':')[0]) < 18;
@@ -256,11 +263,11 @@ const ConsultationForm = () => {
                                <button
                                  key={slot.value}
                                  type="button"
-                                 onClick={() => !isBooked && setSelectedTime(slot.value)}
-                                 disabled={isBooked}
+                                 onClick={() => !isBooked && !isPastTime && setSelectedTime(slot.value)}
+                                 disabled={isBooked || isPastTime}
                                  className={`
                                    relative p-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 active:scale-95
-                                   ${isBooked
+                                   ${isBooked || isPastTime
                                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed opacity-50'
                                      : isSelected 
                                        ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg ring-2 ring-indigo-200' 
@@ -275,6 +282,11 @@ const ConsultationForm = () => {
                                        <>
                                          <div className="w-2 h-2 rounded-full bg-red-400"></div>
                                          <span className="text-xs opacity-75">Booked</span>
+                                       </>
+                                     ) : isPastTime ? (
+                                       <>
+                                         <div className="w-2 h-2 rounded-full bg-gray-400"></div>
+                                         <span className="text-xs opacity-75">Past</span>
                                        </>
                                      ) : (
                                        <>

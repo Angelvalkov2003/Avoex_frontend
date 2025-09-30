@@ -24,12 +24,12 @@ export function isUserFromUS() {
   );
 }
 
-// Generate time slots for whole hours from 9 AM to 10 PM
+// Generate time slots for whole hours from 7 AM to 6 PM
 export function generateTimeSlots() {
   const slots = [];
   const isUS = isUserFromUS();
 
-  for (let hour = 9; hour <= 22; hour++) {
+  for (let hour = 7; hour <= 18; hour++) {
     const timeString = `${hour.toString().padStart(2, "0")}:00`;
 
     // Format time based on user location
