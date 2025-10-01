@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import RateLimitedUI from "../components/RateLimitedUI";
 import ConsultationForm from "../components/ConsultationForm";
+import WorkProcessTree from "../components/WorkProcessTree";
 
 const HomePage = () => {
   const [isRateLimited, setRateLimited] = useState(false);
@@ -13,6 +14,13 @@ const HomePage = () => {
       {isRateLimited && <RateLimitedUI/>}
 
       <div className="max-w-7xl mx-auto p-4 mt-6">
+        {/* Work Process Tree */}
+        {!isRateLimited && (
+          <div className="mb-16">
+            <WorkProcessTree />
+          </div>
+        )}
+
         {/* Create Note Form */}
         {!isRateLimited && (
           <div id="create-form">
