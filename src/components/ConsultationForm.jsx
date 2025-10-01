@@ -14,8 +14,12 @@ const ConsultationForm = () => {
   const [bookedSlots, setBookedSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  // Generate time slots
-  const timeSlots = generateTimeSlots();
+  
+  // Get user's timezone automatically
+  const userTimezone = getUserTimezone();
+  
+  // Generate time slots based on user's timezone
+  const timeSlots = generateTimeSlots(userTimezone);
 
   // Function to load booked slots for a specific date
   const loadBookedSlots = async (date) => {
@@ -23,23 +27,13 @@ const ConsultationForm = () => {
     
     setLoadingSlots(true);
     try {
-      const response = await api.get(`/meetings/booked-slots/${date}`);
+      const response = await api.get(`/meetings/booked-slots/${date}?timezone=${encodeURIComponent(userTimezone)}`);
       const { bookedSlots } = response.data;
       
-      // Convert each booked slot from Bulgarian time to client time
-      const clientTimeSlots = bookedSlots.map(bgTime => {
-        const { clientDate, clientTime } = convertFromBulgarianTime(date, bgTime);
-        return {
-          bgTime,
-          clientTime,
-          clientDate
-        };
-      });
-      
-      // Store both Bulgarian and client times for comparison
+      // Store the booked slots directly as they come from the backend in the client's timezone
       setBookedSlots({
-        bgTimes: bookedSlots,
-        clientTimes: clientTimeSlots.map(slot => slot.clientTime)
+        bgTimes: bookedSlots, // These are already in client timezone from backend
+        clientTimes: bookedSlots
       });
     } catch (error) {
       console.error("Error loading booked slots:", error);
@@ -66,11 +60,11 @@ const ConsultationForm = () => {
     setShowConfirmation(false);
     try {
       // Parse separate date and time inputs into combined date/time and timezone
-      const { clientsDate, clientsTimeZone } = parseDateTimeInput(selectedDate, selectedTime);
+      const { clientsDate, clientsTimeZone } = parseDateTimeInput(selectedDate, selectedTime, userTimezone);
       
       // Calculate Bulgarian time
       const dateTimeString = `${selectedDate}T${selectedTime}`;
-      const { bgDate, bgTime } = convertToBulgarianTime(dateTimeString);
+      const { bgDate, bgTime } = convertToBulgarianTime(dateTimeString, userTimezone);
       
       await api.post("/meetings", {
         client,
@@ -246,7 +240,6 @@ const ConsultationForm = () => {
                 />
               </div>
 
-
                {/* Date & Time field */}
                <div className="form-control group">
                  <label className="label">
@@ -406,7 +399,7 @@ const ConsultationForm = () => {
                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                      </svg>
-                     Times are displayed in your local timezone
+                     Times are displayed in your local timezone ({userTimezone})
                    </span>
                  </label>
                </div>
@@ -459,6 +452,7 @@ const ConsultationForm = () => {
                   <div><strong>Email:</strong> {email}</div>
                   <div><strong>Date:</strong> {new Date(selectedDate).toLocaleDateString()}</div>
                   <div><strong>Time:</strong> {selectedTime}</div>
+                  <div><strong>Timezone:</strong> {userTimezone}</div>
                 </div>
               </div>
 

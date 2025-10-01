@@ -25,20 +25,23 @@ export function isUserFromUS() {
 }
 
 // Generate time slots for whole hours from 7 AM to 6 PM
-export function generateTimeSlots() {
+export function generateTimeSlots(timezone = null) {
   const slots = [];
-  const isUS = isUserFromUS();
+  const targetTimezone = timezone || getUserTimezone();
+  const isUS =
+    targetTimezone.includes("America/") || targetTimezone.includes("US/");
 
   for (let hour = 7; hour <= 18; hour++) {
     const timeString = `${hour.toString().padStart(2, "0")}:00`;
 
-    // Format time based on user location
+    // Format time based on timezone
     const displayTime = new Date(`2000-01-01T${timeString}`).toLocaleTimeString(
       isUS ? "en-US" : "en-GB",
       {
         hour: "2-digit",
         minute: "2-digit",
         hour12: isUS, // 12-hour format for US, 24-hour for others
+        timeZone: targetTimezone,
       }
     );
 
@@ -80,11 +83,11 @@ export function convertToBulgarianTime(dateTimeString) {
 }
 
 // Convert Bulgarian time to client's timezone and return separate date and time
-export function convertFromBulgarianTime(bgDate, bgTime) {
+export function convertFromBulgarianTime(bgDate, bgTime, toTimezone = null) {
   if (!bgDate || !bgTime) return { clientDate: "", clientTime: "" };
 
   // Get the client's timezone
-  const clientTimezone = getUserTimezone();
+  const clientTimezone = toTimezone || getUserTimezone();
 
   // Create a date object from the Bulgarian time
   const bulgarianDateTimeString = `${bgDate}T${bgTime}`;
@@ -148,18 +151,22 @@ export function convertFromBulgarianTime(bgDate, bgTime) {
 }
 
 // Parse separate date and time inputs into combined date/time and timezone
-export function parseDateTimeInput(selectedDate, selectedTime) {
+export function parseDateTimeInput(
+  selectedDate,
+  selectedTime,
+  timezone = null
+) {
   if (!selectedDate || !selectedTime)
     return { clientsDate: "", clientsTimeZone: "" };
 
-  const timezone = getUserTimezone();
+  const selectedTimezone = timezone || getUserTimezone();
 
   // Format as combined date and time string (YYYY-MM-DD HH:MM)
   const clientsDate = `${selectedDate} ${selectedTime}`;
 
   return {
     clientsDate: clientsDate,
-    clientsTimeZone: timezone,
+    clientsTimeZone: selectedTimezone,
   };
 }
 
