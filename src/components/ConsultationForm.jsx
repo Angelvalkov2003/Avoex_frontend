@@ -13,6 +13,7 @@ const ConsultationForm = () => {
   const [createLoading, setCreateLoading] = useState(false);
   const [bookedSlots, setBookedSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   // Generate time slots
   const timeSlots = generateTimeSlots();
 
@@ -56,7 +57,13 @@ const ConsultationForm = () => {
       return;
     }
 
+    // Show confirmation modal
+    setShowConfirmation(true);
+  };
+
+  const confirmBooking = async () => {
     setCreateLoading(true);
+    setShowConfirmation(false);
     try {
       // Parse separate date and time inputs into combined date/time and timezone
       const { clientsDate, clientsTimeZone } = parseDateTimeInput(selectedDate, selectedTime);
@@ -85,18 +92,68 @@ const ConsultationForm = () => {
       setSelectedTime("");
     } catch (error) {
       console.log("Error creating meeting", error);
-      if (error.response.status === 429) {
-        toast.error("Slow down! You're booking consultations too fast", {
+      
+      if (error.response) {
+        const { status, data } = error.response;
+        
+        switch (status) {
+          case 400:
+            if (data.code === "PAST_DATETIME") {
+              toast.error("Cannot book consultations in the past or within 2 hours of current time", {
+                duration: 5000,
+                icon: "⏰",
+              });
+            } else if (data.code === "INVALID_EMAIL") {
+              toast.error("Please enter a valid email address", {
+                duration: 4000,
+                icon: "📧",
+              });
+            } else if (data.code === "MISSING_FIELDS") {
+              toast.error("Please fill in all required fields", {
+                duration: 4000,
+                icon: "⚠️",
+              });
+            } else {
+              toast.error(data.message || "Invalid input. Please check your information", {
+                duration: 4000,
+                icon: "⚠️",
+              });
+            }
+            break;
+          case 409:
+            toast.error("This time slot is already booked. Please choose a different time.", {
+              duration: 5000,
+              icon: "⏰",
+            });
+            break;
+          case 429:
+            toast.error("Slow down! You're booking consultations too fast", {
+              duration: 4000,
+              icon: "❌",
+            });
+            break;
+          case 500:
+            toast.error("Server error. Please try again later", {
+              duration: 5000,
+              icon: "🔧",
+            });
+            break;
+          default:
+            toast.error(data.message || "Failed to book consultation. Please try again", {
+              duration: 4000,
+              icon: "❌",
+            });
+        }
+      } else if (error.request) {
+        toast.error("Network error. Please check your internet connection", {
+          duration: 5000,
+          icon: "🌐",
+        });
+      } else {
+        toast.error("An unexpected error occurred. Please try again", {
           duration: 4000,
           icon: "❌",
         });
-      } else if (error.response.status === 409) {
-        toast.error("This time slot is already booked. Please choose a different time.", {
-          duration: 5000,
-          icon: "⏰",
-        });
-      } else {
-        toast.error("Failed to book consultation");
       }
     } finally {
       setCreateLoading(false);
@@ -188,6 +245,7 @@ const ConsultationForm = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
+
 
                {/* Date & Time field */}
                <div className="form-control group">
@@ -379,6 +437,49 @@ const ConsultationForm = () => {
           </div>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      {showConfirmation && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Confirm Your Booking</h3>
+              <p className="text-gray-600 mb-6">
+                Are you sure you want to book a consultation for:
+              </p>
+              
+              <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+                <div className="space-y-2">
+                  <div><strong>Name:</strong> {client}</div>
+                  <div><strong>Email:</strong> {email}</div>
+                  <div><strong>Date:</strong> {new Date(selectedDate).toLocaleDateString()}</div>
+                  <div><strong>Time:</strong> {selectedTime}</div>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowConfirmation(false)}
+                  className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmBooking}
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all"
+                >
+                  Confirm Booking
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
