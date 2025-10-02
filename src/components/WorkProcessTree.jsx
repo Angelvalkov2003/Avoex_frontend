@@ -72,10 +72,6 @@ const WorkProcessTree = () => {
         <div className="space-y-8 pt-4">
           {processSteps.map((step, index) => (
             <div key={step.id} className="relative group">
-              {/* Mobile connector line with glow effect - fixed positioning */}
-              {index < processSteps.length - 1 && (
-                <div className="absolute left-7 top-20 w-0.5 bg-gradient-to-b from-blue-300 via-purple-300 to-pink-300 h-6 z-0 rounded-full shadow-lg"></div>
-              )}
               
               <div className="flex items-start gap-4">
                 {/* Step number circle with enhanced effects */}
