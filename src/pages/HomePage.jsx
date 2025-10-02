@@ -16,7 +16,7 @@ const HomePage = () => {
       <div className="max-w-7xl mx-auto p-4 mt-6">
         {/* Work Process Tree */}
         {!isRateLimited && (
-          <div className="mb-16">
+          <div id="work-process" className="mb-16">
             <WorkProcessTree />
           </div>
         )}
