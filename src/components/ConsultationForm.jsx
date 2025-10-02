@@ -175,6 +175,14 @@ const ConsultationForm = () => {
               </div>
               <h2 className="text-3xl font-bold text-center mb-2">Book Consultation</h2>
               <p className="text-center text-blue-100">Schedule your consultation with us</p>
+              <div className="mt-4 p-3 bg-white/20 rounded-lg backdrop-blur-sm">
+                <div className="flex items-center justify-center gap-2 text-sm">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-white font-medium">We automatically detect your location: {userTimezone}</span>
+                </div>
+              </div>
             </div>
             
             {/* Floating elements */}
@@ -399,9 +407,27 @@ const ConsultationForm = () => {
                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                      </svg>
-                     Times are displayed in your local timezone ({userTimezone})
+                     Times are displayed in your local timezone
                    </span>
                  </label>
+                 
+                 {/* Region detection info */}
+                 <div className="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                   <div className="flex items-start gap-3">
+                     <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                       <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                       </svg>
+                     </div>
+                     <div className="text-sm">
+                       <p className="font-medium text-blue-800 mb-1">Location & Timezone Detection</p>
+                       <p className="text-blue-700">
+                         We automatically detect and save your region to ensure accurate scheduling. 
+                         Your consultation will be scheduled in your local time, and we'll handle all timezone conversions for you.
+                       </p>
+                     </div>
+                   </div>
+                 </div>
                </div>
 
               {/* Submit button */}
@@ -452,7 +478,15 @@ const ConsultationForm = () => {
                   <div><strong>Email:</strong> {email}</div>
                   <div><strong>Date:</strong> {new Date(selectedDate).toLocaleDateString()}</div>
                   <div><strong>Time:</strong> {selectedTime}</div>
-                  <div><strong>Timezone:</strong> {userTimezone}</div>
+                  <div className="flex items-center gap-2">
+                    <strong>Region:</strong> 
+                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                      {userTimezone}
+                    </span>
+                  </div>
+                  <div className="text-sm text-gray-600 mt-2 p-2 bg-blue-50 rounded border-l-4 border-blue-400">
+                    <strong>Note:</strong> Your region has been automatically detected and saved for accurate scheduling.
+                  </div>
                 </div>
               </div>
 

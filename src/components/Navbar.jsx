@@ -21,7 +21,9 @@ const Navbar = () => {
   };
 
   const navItems = [
-    { name: 'PROCESS', action: () => scrollToSection('work-process') }
+    { name: 'ABOUT US', action: () => scrollToSection('about') },
+    { name: 'PROCESS', action: () => scrollToSection('work-process') },
+    { name: 'PRICING', action: () => scrollToSection('pricing') }
   ];
 
   return (
