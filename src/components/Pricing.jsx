@@ -6,7 +6,7 @@ const Pricing = () => {
     {
       id: 'basic-website',
       name: 'Basic Website Package',
-      price: '150',
+      price: '200',
       currency: '$',
       description: 'Perfect solution for small businesses, restaurants, salons, law offices, and more.',
       icon: <Star className="w-8 h-8 text-blue-500" />,
@@ -27,10 +27,11 @@ const Pricing = () => {
         ]
       },
       maintenance: {
-        price: 5,
+        price: 20,
         period: 'month',
         features: [
-          'Minor content changes',
+          'Bug fixes and problem resolution',
+          'Up to 2 hours of changes per month',
           'Updates and basic security',
           'Quick response to questions'
         ]
@@ -40,7 +41,7 @@ const Pricing = () => {
     {
       id: 'booking-website',
       name: 'Booking Website',
-      price: '500-800',
+      price: '500',
       currency: '$',
       description: 'Perfect for restaurants, hotels, salons, and services that need online booking functionality',
       icon: <Zap className="w-8 h-8 text-purple-500" />,
@@ -53,7 +54,7 @@ const Pricing = () => {
         'Admin dashboard for managing bookings'
       ],
       hosting: {
-        price: 15,
+        price: 40,
         period: 'month',
         features: [
           'High-performance hosting',
@@ -63,13 +64,14 @@ const Pricing = () => {
         ]
       },
       maintenance: {
-        price: 8,
+        price: 40,
         period: 'month',
         features: [
+          'Bug fixes and problem resolution',
+          'Up to 4 hours of changes per month',
           'Regular updates',
           'Security monitoring',
-          'Priority support',
-          'Minimal pricing for additional changes'
+          'Priority support'
         ]
       },
       popular: false
@@ -153,10 +155,11 @@ const Pricing = () => {
                   
                   {/* Price */}
                   <div className="mb-6">
+                    {plan.price !== 'Custom' && !plan.price.includes('+') && <span className="text-gray-500 mr-2">around</span>}
                     <span className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                       {plan.price === 'Custom' ? 'Custom' : `${plan.currency}${plan.price}`}
                     </span>
-                    {plan.price !== 'Custom' && <span className="text-gray-500 ml-2">around</span>}
+                    {plan.price.includes('+') && <span className="text-gray-500 ml-2">starting from</span>}
                   </div>
                 </div>
 
@@ -218,6 +221,16 @@ const Pricing = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Additional information */}
+        <div className="mt-12 text-center space-y-4">
+          <p className="text-sm text-gray-500">
+            Hosting and maintenance are optional - you can handle them yourself if preferred.
+          </p>
+          <p className="text-sm text-gray-600 font-medium">
+            All prices are indicative. Final project, hosting, and maintenance prices are determined during consultation.
+          </p>
         </div>
 
       </div>
