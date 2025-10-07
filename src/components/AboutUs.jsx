@@ -31,7 +31,7 @@ const AboutUs = () => {
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Left column - Main story cards */}
             <div className="space-y-6">
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="bg-gradient-to-r from-blue-100 via-purple-100 to-blue-200 rounded-2xl p-6 border border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 <p className="text-lg leading-relaxed text-gray-700">
                   We are a <span className="font-bold text-blue-600">new IT company</span> built by <span className="font-bold text-purple-600">experienced programmers </span>
                   who no longer want to work in large companies where projects involve many other people, because having
@@ -39,7 +39,7 @@ const AboutUs = () => {
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="bg-gradient-to-tl from-purple-100 via-blue-100 to-purple-200 rounded-2xl p-6 border border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 <p className="text-lg leading-relaxed text-gray-700">
                   That's why we want each person to manage their own project - acting as both <span className="font-bold text-blue-600">project manager</span> and <span className="font-bold text-purple-600">developer</span>,
                   meeting with clients and programming the solution. This makes the entire process much more <span className="font-bold text-blue-600">optimal</span>.
@@ -49,7 +49,7 @@ const AboutUs = () => {
 
             {/* Right column - Technology and pricing cards */}
             <div className="space-y-6">
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="bg-gradient-to-bl from-blue-100 via-purple-100 to-blue-200 rounded-2xl p-6 border border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 <p className="text-lg leading-relaxed text-gray-700">
                   We primarily use <span className="font-bold text-purple-600">JavaScript</span> as our main technology,
                   but we can adapt to use any other technology when needed. We also use AI,
@@ -57,7 +57,7 @@ const AboutUs = () => {
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="bg-gradient-to-tr from-purple-100 via-blue-100 to-purple-200 rounded-2xl p-6 border border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 <p className="text-lg leading-relaxed text-gray-700">
                   Our <span className="font-bold text-blue-600">pricing is competitive</span> because we don't have unnecessary people and our <span className="font-bold text-purple-600">optimized workflow</span>.
                   We aim to build long-term relationships for future projects with every client and demonstrate our
