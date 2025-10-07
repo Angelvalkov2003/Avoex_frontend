@@ -1,7 +1,6 @@
 import React from "react";
 
 const WorkProcessTree = () => {
-
   const processSteps = [
     {
       id: 1,
@@ -51,9 +50,8 @@ const WorkProcessTree = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto mb-8 px-4 relative">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-pink-50/30 rounded-3xl blur-3xl -z-10"></div>
+    <div className="py-20">
+      <div className="max-w-6xl mx-auto px-4">
       
       <div className="text-center mb-12 relative">
         <div className="inline-block relative">
@@ -110,14 +108,18 @@ const WorkProcessTree = () => {
 
       {/* Desktop layout */}
       <div className="hidden lg:block relative">
-        {/* Main vertical connector line with proper gradient */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 w-2 bg-gradient-to-b from-blue-300 via-purple-300 to-pink-300 h-full rounded-full shadow-lg"></div>
-        <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-blue-200 via-purple-200 to-pink-200 h-full rounded-full"></div>
+        {/* Enhanced tree trunk/connector line with glow */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 w-2 bg-gradient-to-b from-blue-300 via-purple-300 to-emerald-300 h-full rounded-full shadow-lg"></div>
+        <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-blue-200 via-purple-200 to-emerald-200 h-full rounded-full"></div>
         
         {/* Process steps */}
         <div className="space-y-12">
           {processSteps.map((step, index) => (
             <div key={step.id} className="relative group">
+              {/* Enhanced step connector line to next step */}
+              {index < processSteps.length - 1 && (
+                <div className="absolute left-1/2 transform -translate-x-1/2 w-2 bg-gradient-to-b from-gray-300 to-gray-400 h-12 top-20 z-0 rounded-full shadow-lg"></div>
+              )}
               
               {/* Step content */}
               <div className={`relative z-10 flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}>
@@ -170,6 +172,7 @@ const WorkProcessTree = () => {
           <span className="text-gray-700 font-semibold text-base group-hover:text-gray-800 transition-colors duration-300">Ready to start your project?</span>
           <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-ping"></div>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -157,11 +157,9 @@ const ConsultationForm = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="relative">
-        {/* Background decoration */}
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl blur-3xl"></div>
         
         {/* Main form card */}
-        <div className="relative card bg-gradient-to-br from-white/95 to-blue-50/95 backdrop-blur-sm shadow-2xl border border-white/20 rounded-3xl overflow-hidden">
+        <div className="relative card bg-white shadow-2xl border border-gray-200 rounded-3xl overflow-hidden">
           {/* Header section */}
           <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-8 text-white relative overflow-hidden">
             <div className="absolute inset-0 bg-black/10"></div>
