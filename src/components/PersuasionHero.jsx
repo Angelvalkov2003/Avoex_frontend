@@ -25,11 +25,27 @@ const PersuasionHero = () => {
     }
   ];
 
-  const stats = [
-    { number: "97%", label: "of consumers search online for local businesses" },
-    { number: "75%", label: "judge credibility based on website design" },
-    { number: "88%", label: "won't return to a site after bad experience" },
-    { number: "64%", label: "of small businesses don't have a website" }
+  const whyUsBenefits = [
+    {
+      icon: <CheckCircle className="w-6 h-6 text-blue-500" />,
+      title: "Free Consultation",
+      description: "Our consultation is completely free and fast, and you'll hear the price without any obligation afterwards, so why not?"
+    },
+    {
+      icon: <Shield className="w-6 h-6 text-purple-500" />,
+      title: "Modern Technologies",
+      description: "We use the latest and most secure technologies on the market, making our projects faster, more secure, and more efficient."
+    },
+    {
+      icon: <Users className="w-6 h-6 text-green-500" />,
+      title: "Individual Approach",
+      description: "Each project is handled by an individual programmer, making the project faster and more personal."
+    },
+    {
+      icon: <TrendingUp className="w-6 h-6 text-orange-500" />,
+      title: "Experienced Team",
+      description: "We're suitable for all types of projects because our team consists of experienced programmers."
+    }
   ];
 
   return (
@@ -92,21 +108,24 @@ const PersuasionHero = () => {
 
           </div>
 
-          {/* Right side - Stats and social proof */}
+          {/* Right side - Why Us section */}
           <div className="space-y-8">
-            {/* Stats section */}
+            {/* Why Us section */}
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/50">
               <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-                Why You Need a Website
+                Why Choose Us
               </h3>
               
               <div className="space-y-6">
-                {stats.map((stat, index) => (
-                  <div key={index} className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100">
-                    <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                      {stat.number}
+                {whyUsBenefits.map((benefit, index) => (
+                  <div key={index} className="flex items-start gap-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100 hover:shadow-md transition-all duration-300">
+                    <div className="flex-shrink-0 w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                      {benefit.icon}
                     </div>
-                    <p className="text-gray-700 font-medium">{stat.label}</p>
+                    <div>
+                      <h4 className="font-semibold text-gray-800 mb-2">{benefit.title}</h4>
+                      <p className="text-gray-600 text-sm leading-relaxed">{benefit.description}</p>
+                    </div>
                   </div>
                 ))}
               </div>

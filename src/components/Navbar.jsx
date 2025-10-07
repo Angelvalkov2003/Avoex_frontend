@@ -20,6 +20,14 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+    setIsMenuOpen(false);
+  };
+
   const navItems = [
     { name: 'ABOUT US', action: () => scrollToSection('about') },
     { name: 'PROCESS', action: () => scrollToSection('work-process') },
@@ -32,7 +40,12 @@ const Navbar = () => {
             <div className='flex items-center justify-between h-20'>
                 {/* Logo */}
                 <div className='flex-shrink-0'>
-                    <h1 className='text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent tracking-tight'>Avoex</h1>
+                    <button 
+                      onClick={scrollToTop}
+                      className='text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent tracking-tight hover:scale-105 transition-transform duration-300'
+                    >
+                      Avoex
+                    </button>
                 </div>
 
                 {/* Desktop Navigation */}

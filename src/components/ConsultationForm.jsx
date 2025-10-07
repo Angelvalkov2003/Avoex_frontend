@@ -478,15 +478,6 @@ const ConsultationForm = () => {
                   <div><strong>Email:</strong> {email}</div>
                   <div><strong>Date:</strong> {new Date(selectedDate).toLocaleDateString()}</div>
                   <div><strong>Time:</strong> {selectedTime}</div>
-                  <div className="flex items-center gap-2">
-                    <strong>Region:</strong> 
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                      {userTimezone}
-                    </span>
-                  </div>
-                  <div className="text-sm text-gray-600 mt-2 p-2 bg-blue-50 rounded border-l-4 border-blue-400">
-                    <strong>Note:</strong> Your region has been automatically detected and saved for accurate scheduling.
-                  </div>
                 </div>
               </div>
 
