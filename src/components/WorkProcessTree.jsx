@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 const WorkProcessTree = () => {
   const processSteps = [
@@ -50,10 +51,22 @@ const WorkProcessTree = () => {
   ];
 
   return (
-    <div className="py-20">
+    <motion.div 
+      className="py-20"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+    >
       <div className="max-w-6xl mx-auto px-4">
       
-      <div className="text-center mb-12 relative">
+      <motion.div 
+        className="text-center mb-12 relative"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
         <div className="inline-block relative">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4 animate-fade-in">
             Our Work Process
@@ -64,13 +77,35 @@ const WorkProcessTree = () => {
           From initial consultation to final delivery, we follow a structured approach 
           to ensure your project's success
         </p>
-      </div>
+      </motion.div>
 
       {/* Mobile-first vertical layout */}
       <div className="block lg:hidden">
-        <div className="space-y-8 pt-4">
+        <motion.div 
+          className="space-y-8 pt-4"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
           {processSteps.map((step, index) => (
-            <div key={step.id} className="relative group">
+            <motion.div 
+              key={step.id} 
+              className="relative group"
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ 
+                duration: 0.6, 
+                delay: 0.1 * index,
+                type: "spring",
+                stiffness: 100
+              }}
+              whileHover={{ 
+                scale: 1.02,
+                transition: { duration: 0.2 }
+              }}
+            >
               
               <div className="flex items-start gap-4">
                 {/* Step number circle with enhanced effects */}
@@ -101,21 +136,49 @@ const WorkProcessTree = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
       {/* Desktop layout */}
-      <div className="hidden lg:block relative">
+      <motion.div 
+        className="hidden lg:block relative"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: 0.6 }}
+      >
         {/* Enhanced tree trunk/connector line with glow */}
         <div className="absolute left-1/2 transform -translate-x-1/2 w-2 bg-gradient-to-b from-blue-300 via-purple-300 to-emerald-300 h-full rounded-full shadow-lg"></div>
         <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-blue-200 via-purple-200 to-emerald-200 h-full rounded-full"></div>
         
         {/* Process steps */}
-        <div className="space-y-12">
+        <motion.div 
+          className="space-y-12"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+        >
           {processSteps.map((step, index) => (
-            <div key={step.id} className="relative group">
+            <motion.div 
+              key={step.id} 
+              className="relative group"
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ 
+                duration: 0.8, 
+                delay: 0.2 * index,
+                type: "spring",
+                stiffness: 80
+              }}
+              whileHover={{ 
+                scale: 1.02,
+                transition: { duration: 0.3 }
+              }}
+            >
               {/* Enhanced step connector line to next step */}
               {index < processSteps.length - 1 && (
                 <div className="absolute left-1/2 transform -translate-x-1/2 w-2 bg-gradient-to-b from-gray-300 to-gray-400 h-12 top-20 z-0 rounded-full shadow-lg"></div>
@@ -160,21 +223,27 @@ const WorkProcessTree = () => {
                 {/* Empty space for alternating layout */}
                 <div className={`flex-1 ${index % 2 === 0 ? 'pl-12' : 'pr-12'}`}></div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Enhanced bottom decoration */}
-      <div className="mt-12 text-center">
+      <motion.div 
+        className="mt-12 text-center"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 1.2 }}
+      >
         <div className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group cursor-pointer">
           <div className="w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse group-hover:animate-bounce"></div>
           <span className="text-gray-700 font-semibold text-base group-hover:text-gray-800 transition-colors duration-300">Ready to start your project?</span>
           <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-ping"></div>
         </div>
+      </motion.div>
       </div>
-      </div>
-    </div>
+    </motion.div>
   );
 };
 

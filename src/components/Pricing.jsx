@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check, Star, Zap, Shield } from 'lucide-react';
+import { motion } from 'framer-motion';
 import useTimezone from '../hooks/useTimezone';
 
 const Pricing = () => {
@@ -11,13 +12,9 @@ const Pricing = () => {
       return {
         basic: { price: '300', currency: '$' },
         booking: { price: '600', currency: '$' },
-        hosting: {
-          basic: { price: 12, currency: '$' },
-          booking: { price: 48, currency: '$' }
-        },
         maintenance: {
-          basic: { price: 24, currency: '$' },
-          booking: { price: 48, currency: '$' }
+          basic: { price: 15, currency: '$' },
+          booking: { price: 30, currency: '$' }
         }
       };
     }
@@ -25,13 +22,9 @@ const Pricing = () => {
     return {
       basic: { price: '250', currency: '€' },
       booking: { price: '500', currency: '€' },
-      hosting: {
-        basic: { price: 10, currency: '€' },
-        booking: { price: 40, currency: '€' }
-      },
       maintenance: {
-        basic: { price: 20, currency: '€' },
-        booking: { price: 40, currency: '€' }
+        basic: { price: 12, currency: '€' },
+        booking: { price: 24, currency: '€' }
       }
     };
   };
@@ -53,16 +46,6 @@ const Pricing = () => {
         'Contact form and social media integration',
         'Up to 2 small revisions included during development'
       ],
-      hosting: {
-        price: regionalPricing.hosting.basic.price,
-        currency: regionalPricing.hosting.basic.currency,
-        period: 'month',
-        features: [
-          'Fast and secure hosting',
-          'SSL certificate (https://)',
-          'Backups and technical support'
-        ]
-      },
       maintenance: {
         price: regionalPricing.maintenance.basic.price,
         currency: regionalPricing.maintenance.basic.currency,
@@ -91,17 +74,6 @@ const Pricing = () => {
         'Email notifications',
         'Admin dashboard for managing bookings'
       ],
-      hosting: {
-        price: regionalPricing.hosting.booking.price,
-        currency: regionalPricing.hosting.booking.currency,
-        period: 'month',
-        features: [
-          'High-performance hosting',
-          'SSL certificate (https://)',
-          'Automatic backups',
-          '24/7 technical support'
-        ]
-      },
       maintenance: {
         price: regionalPricing.maintenance.booking.price,
         currency: regionalPricing.maintenance.booking.currency,
@@ -131,17 +103,6 @@ const Pricing = () => {
         'Scalable architecture',
         'Ongoing development support'
       ],
-      hosting: {
-        price: 'Custom',
-        period: '',
-        features: [
-          'Custom hosting solution',
-          'SSL certificate (https://)',
-          'Performance optimization',
-          'Security monitoring',
-          '24/7 technical support'
-        ]
-      },
       maintenance: {
         price: 'Custom',
         period: '',
@@ -172,10 +133,23 @@ const Pricing = () => {
   }
 
   return (
-    <section id="pricing" className="py-20">
+    <motion.section 
+      id="pricing" 
+      className="py-20"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
-        <div className="text-center mb-16">
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
         <h2 className="text-4xl lg:text-5xl font-bold leading-tight bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4 pb-1">
   Pricing Plans
 </h2>
@@ -183,24 +157,34 @@ const Pricing = () => {
           <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto mb-6"></div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Choose the perfect plan for your business needs. All plans include detailed consultation and ongoing support.
-            {region === 'america' ? (
-              <span className="block mt-2 text-sm text-blue-600 font-medium">
-                Prices shown in USD for America (UTC-)
-              </span>
-            ) : (
-              <span className="block mt-2 text-sm text-blue-600 font-medium">
-                Prices shown in EUR for Europe and other regions (UTC+)
-              </span>
-            )}
           </p>
-        </div>
+        </motion.div>
 
         {/* Pricing cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {pricingPlans.map((plan) => (
-            <div
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          {pricingPlans.map((plan, index) => (
+            <motion.div
               key={plan.id}
               className="relative bg-white rounded-2xl shadow-xl border-2 border-gray-200 hover:border-blue-300 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 flex flex-col h-full"
+              initial={{ opacity: 0, y: 30, scale: 0.9 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ 
+                duration: 0.6, 
+                delay: 0.1 * index,
+                type: "spring",
+                stiffness: 100
+              }}
+              whileHover={{ 
+                scale: 1.02,
+                transition: { duration: 0.2 }
+              }}
             >
 
               <div className="p-8 flex flex-col h-full">
@@ -234,27 +218,6 @@ const Pricing = () => {
 
                 {/* Additional services */}
                 <div className="space-y-6 pt-6 border-t border-gray-200 mt-auto">
-                  {/* Hosting */}
-                  <div className="bg-blue-50 rounded-lg p-4">
-                    <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <span className="font-semibold text-gray-800">Hosting</span>
-                        <p className="text-sm text-gray-600">Optional</p>
-                      </div>
-                      <span className="font-bold text-blue-600">
-                        {plan.hosting.price === 'Custom' ? 'Custom' : `${plan.hosting.currency}${plan.hosting.price}/${plan.hosting.period}`}
-                      </span>
-                    </div>
-                    <div className="space-y-1">
-                      {plan.hosting.features.map((feature, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <Check className="w-4 h-4 text-blue-500" />
-                          <span className="text-sm text-gray-700">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
                   {/* Maintenance */}
                   <div className="bg-purple-50 rounded-lg p-4">
                     <div className="flex justify-between items-start mb-3">
@@ -278,22 +241,42 @@ const Pricing = () => {
                 </div>
 
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
+
+        {/* Hosting Information Box */}
+        <motion.div 
+          className="mt-8 max-w-2xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
+          <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+            <div className="text-center">
+              <p className="text-sm text-gray-600">
+                Hosting is selected by the client, but we'll help if you need assistance with this part.
+              </p>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Additional information */}
-        <div className="mt-12 text-center space-y-4">
-          <p className="text-sm text-gray-500">
-            Hosting and maintenance are optional - you can handle them yourself if preferred.
-          </p>
+        <motion.div 
+          className="mt-8 text-center space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
           <p className="text-sm text-gray-600 font-medium">
-            All prices are indicative. Final project, hosting, and maintenance prices are determined during consultation.
+            All prices are indicative. Final project and maintenance prices are determined during consultation.
           </p>
-        </div>
+        </motion.div>
 
       </div>
-    </section>
+    </motion.section>
   );
 };
 

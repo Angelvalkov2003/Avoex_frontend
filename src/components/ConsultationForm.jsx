@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import api from "../lib/axios";
 import { parseDateTimeInput, convertToBulgarianTime, convertFromBulgarianTime, generateTimeSlots, isUserFromUS, getUserTimezone } from "../lib/utils";
@@ -155,13 +156,35 @@ const ConsultationForm = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <motion.div 
+      className="max-w-4xl mx-auto"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+    >
       <div className="relative">
         
         {/* Main form card */}
-        <div className="relative card bg-white shadow-2xl border border-gray-200 rounded-3xl overflow-hidden">
+        <motion.div 
+          className="relative card bg-white shadow-2xl border border-gray-200 rounded-3xl overflow-hidden"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          whileHover={{ 
+            scale: 1.01,
+            transition: { duration: 0.3 }
+          }}
+        >
           {/* Header section */}
-          <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-8 text-white relative overflow-hidden">
+          <motion.div 
+            className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-8 text-white relative overflow-hidden"
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="relative z-10">
               <div className="flex items-center justify-center mb-4">
@@ -186,12 +209,24 @@ const ConsultationForm = () => {
             {/* Floating elements */}
             <div className="absolute top-4 right-4 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
             <div className="absolute bottom-4 left-4 w-16 h-16 bg-pink-300/20 rounded-full blur-lg"></div>
-          </div>
+          </motion.div>
 
-          <div className="p-8">
+          <motion.div 
+            className="p-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
             <form onSubmit={handleCreateMeeting} className="space-y-6">
               {/* Name field */}
-              <div className="form-control group">
+              <motion.div 
+                className="form-control group"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+              >
                 <label className="label">
                   <span className="label-text text-lg font-semibold text-gray-700 flex items-center gap-2">
                     <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,10 +242,16 @@ const ConsultationForm = () => {
                     value={client}
                     onChange={(e) => setClient(e.target.value)}
                   />
-              </div>
+              </motion.div>
 
               {/* Project Description field */}
-              <div className="form-control group">
+              <motion.div 
+                className="form-control group"
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 1.0 }}
+              >
                 <label className="label">
                   <span className="label-text text-lg font-semibold text-gray-700 flex items-center gap-2">
                     <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -225,10 +266,16 @@ const ConsultationForm = () => {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                 />
-              </div>
+              </motion.div>
 
               {/* Email field */}
-              <div className="form-control group">
+              <motion.div 
+                className="form-control group"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 1.2 }}
+              >
                 <label className="label">
                   <span className="label-text text-lg font-semibold text-gray-700 flex items-center gap-2">
                     <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -244,10 +291,16 @@ const ConsultationForm = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-              </div>
+              </motion.div>
 
                {/* Date & Time field */}
-               <div className="form-control group">
+               <motion.div 
+                 className="form-control group"
+                 initial={{ opacity: 0, y: 30 }}
+                 whileInView={{ opacity: 1, y: 0 }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 0.6, delay: 1.4 }}
+               >
                  <label className="label">
                    <span className="label-text text-lg font-semibold text-gray-700 flex items-center gap-2">
                      <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -426,10 +479,16 @@ const ConsultationForm = () => {
                      </div>
                    </div>
                  </div>
-               </div>
+               </motion.div>
 
               {/* Submit button */}
-              <div className="pt-6">
+              <motion.div 
+                className="pt-6"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 1.6 }}
+              >
                 <button 
                   type="submit" 
                   className="btn btn-primary w-full h-16 text-lg font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 border-0 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
@@ -449,16 +508,26 @@ const ConsultationForm = () => {
                     </div>
                   )}
                 </button>
-              </div>
+              </motion.div>
             </form>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Confirmation Modal */}
       {showConfirmation && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+        <motion.div 
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <motion.div 
+            className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl"
+            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.4, type: "spring", stiffness: 300 }}
+          >
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -494,10 +563,10 @@ const ConsultationForm = () => {
                 </button>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

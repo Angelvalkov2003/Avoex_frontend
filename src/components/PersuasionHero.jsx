@@ -52,7 +52,7 @@ const PersuasionHero = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1 }}
+      transition={{ duration: 1.5 }}
 >
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Transparent background to show global gradient */}
@@ -85,8 +85,7 @@ const PersuasionHero = () => {
               </h1>
               
               <p className="text-xl text-gray-600 leading-relaxed max-w-lg">
-                Don't let your competitors get ahead. In today's digital world, 
-                <strong className="text-gray-800"> having a professional website isn't optional</strong> - 
+                <strong className="text-gray-800"> Having a professional website isn't optional</strong> - 
                 it's essential for your business success.
               </p>
             </div>
