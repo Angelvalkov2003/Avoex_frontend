@@ -1,5 +1,6 @@
 import React from 'react';
 import { CheckCircle, Star, Shield, Globe, Users, TrendingUp } from 'lucide-react';
+import { motion } from "framer-motion";
 
 const PersuasionHero = () => {
   const benefits = [
@@ -47,8 +48,12 @@ const PersuasionHero = () => {
       description: "We're suitable for all types of projects because our team consists of experienced programmers."
     }
   ];
-
   return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1 }}
+>
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Transparent background to show global gradient */}
 
@@ -130,6 +135,7 @@ const PersuasionHero = () => {
         </div>
       </div>
     </section>
+    </motion.div>
   );
 };
 

@@ -1,14 +1,50 @@
 import React from 'react';
 import { Check, Star, Zap, Shield } from 'lucide-react';
+import useTimezone from '../hooks/useTimezone';
 
 const Pricing = () => {
+  const { region, isLoading } = useTimezone();
+
+  // Функция за определяне на цените според региона
+  const getPricingForRegion = () => {
+    if (region === 'america') {
+      return {
+        basic: { price: '300', currency: '$' },
+        booking: { price: '600', currency: '$' },
+        hosting: {
+          basic: { price: 12, currency: '$' },
+          booking: { price: 48, currency: '$' }
+        },
+        maintenance: {
+          basic: { price: 24, currency: '$' },
+          booking: { price: 48, currency: '$' }
+        }
+      };
+    }
+    // Европа и останалите региони
+    return {
+      basic: { price: '250', currency: '€' },
+      booking: { price: '500', currency: '€' },
+      hosting: {
+        basic: { price: 10, currency: '€' },
+        booking: { price: 40, currency: '€' }
+      },
+      maintenance: {
+        basic: { price: 20, currency: '€' },
+        booking: { price: 40, currency: '€' }
+      }
+    };
+  };
+
+  const regionalPricing = getPricingForRegion();
+
   const pricingPlans = [
     {
       id: 'basic-website',
-      name: 'Basic Website Package',
-      price: '200',
-      currency: '$',
-      description: 'Perfect solution for small businesses, restaurants, salons, law offices, and more.',
+      name: 'Static Website',
+      price: regionalPricing.basic.price,
+      currency: regionalPricing.basic.currency,
+      description: 'Ideal for small businesses that want to showcase their brand, services, or contact info beautifully — without complex features.',
       icon: <Star className="w-8 h-8 text-blue-500" />,
       features: [
         'Consultation and design discussion',
@@ -18,7 +54,8 @@ const Pricing = () => {
         'Up to 2 small revisions included during development'
       ],
       hosting: {
-        price: 10,
+        price: regionalPricing.hosting.basic.price,
+        currency: regionalPricing.hosting.basic.currency,
         period: 'month',
         features: [
           'Fast and secure hosting',
@@ -27,7 +64,8 @@ const Pricing = () => {
         ]
       },
       maintenance: {
-        price: 20,
+        price: regionalPricing.maintenance.basic.price,
+        currency: regionalPricing.maintenance.basic.currency,
         period: 'month',
         features: [
           'Bug fixes and problem resolution',
@@ -41,8 +79,8 @@ const Pricing = () => {
     {
       id: 'booking-website',
       name: 'Booking Website',
-      price: '500',
-      currency: '$',
+      price: regionalPricing.booking.price,
+      currency: regionalPricing.booking.currency,
       description: 'Perfect for restaurants, hotels, salons, and services that need online booking functionality',
       icon: <Zap className="w-8 h-8 text-purple-500" />,
       features: [
@@ -54,7 +92,8 @@ const Pricing = () => {
         'Admin dashboard for managing bookings'
       ],
       hosting: {
-        price: 40,
+        price: regionalPricing.hosting.booking.price,
+        currency: regionalPricing.hosting.booking.currency,
         period: 'month',
         features: [
           'High-performance hosting',
@@ -64,7 +103,8 @@ const Pricing = () => {
         ]
       },
       maintenance: {
-        price: 40,
+        price: regionalPricing.maintenance.booking.price,
+        currency: regionalPricing.maintenance.booking.currency,
         period: 'month',
         features: [
           'Bug fixes and problem resolution',
@@ -117,17 +157,41 @@ const Pricing = () => {
     }
   ];
 
+  // Показваме loading състояние докато определяме региона
+  if (isLoading) {
+    return (
+      <section id="pricing" className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading pricing information...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="pricing" className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
-            Pricing Plans
-          </h2>
+        <h2 className="text-4xl lg:text-5xl font-bold leading-tight bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4 pb-1">
+  Pricing Plans
+</h2>
+
           <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto mb-6"></div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Choose the perfect plan for your business needs. All plans include detailed consultation and ongoing support.
+            {region === 'america' ? (
+              <span className="block mt-2 text-sm text-blue-600 font-medium">
+                Prices shown in USD for America (UTC-)
+              </span>
+            ) : (
+              <span className="block mt-2 text-sm text-blue-600 font-medium">
+                Prices shown in EUR for Europe and other regions (UTC+)
+              </span>
+            )}
           </p>
         </div>
 
@@ -178,7 +242,7 @@ const Pricing = () => {
                         <p className="text-sm text-gray-600">Optional</p>
                       </div>
                       <span className="font-bold text-blue-600">
-                        {plan.hosting.price === 'Custom' ? 'Custom' : `${plan.currency}${plan.hosting.price}/${plan.hosting.period}`}
+                        {plan.hosting.price === 'Custom' ? 'Custom' : `${plan.hosting.currency}${plan.hosting.price}/${plan.hosting.period}`}
                       </span>
                     </div>
                     <div className="space-y-1">
@@ -199,7 +263,7 @@ const Pricing = () => {
                         <p className="text-sm text-gray-600">Recommended</p>
                       </div>
                       <span className="font-bold text-purple-600">
-                        {plan.maintenance.price === 'Custom' ? 'Custom' : `${plan.currency}${plan.maintenance.price}/${plan.maintenance.period}`}
+                        {plan.maintenance.price === 'Custom' ? 'Custom' : `${plan.maintenance.currency}${plan.maintenance.price}/${plan.maintenance.period}`}
                       </span>
                     </div>
                     <div className="space-y-1">
