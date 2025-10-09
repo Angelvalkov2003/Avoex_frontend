@@ -61,76 +61,176 @@ const PersuasionHero = () => {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           
           {/* Left side - Main content */}
-          <div className="space-y-8">
+          <motion.div 
+            className="space-y-8"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full border border-blue-200">
-              <Star className="w-4 h-4 text-blue-600" />
+            <motion.div 
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full border border-blue-200"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <motion.div
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+              >
+                <Star className="w-4 h-4 text-blue-600" />
+              </motion.div>
               <span className="text-sm font-semibold text-blue-800">Your Digital Success Starts Here</span>
-            </div>
+            </motion.div>
 
             {/* Main headline */}
-            <div className="space-y-4">
+            <motion.div 
+              className="space-y-4"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
               <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <motion.span 
+                  className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                >
                   Your Business
-                </span>
+                </motion.span>
                 <br />
-                <span className="text-gray-800">
+                <motion.span 
+                  className="text-gray-800"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 1.0 }}
+                >
                   Deserves a
-                </span>
+                </motion.span>
                 <br />
-                <span className="bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
+                <motion.span 
+                  className="bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 bg-clip-text text-transparent"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 1.2 }}
+                >
                   Professional Website
-                </span>
+                </motion.span>
               </h1>
               
-              <p className="text-xl text-gray-600 leading-relaxed max-w-lg">
+              <motion.p 
+                className="text-xl text-gray-600 leading-relaxed max-w-lg"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.4 }}
+              >
                 <strong className="text-gray-800"> Having a professional website isn't optional</strong> - 
                 it's essential for your business success.
-              </p>
-            </div>
+              </motion.p>
+            </motion.div>
 
             {/* Benefits grid */}
-            <div className="grid sm:grid-cols-2 gap-4">
+            <motion.div 
+              className="grid sm:grid-cols-2 gap-4"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.6 }}
+            >
               {benefits.map((benefit, index) => (
-                <div key={index} className="flex items-start gap-3 p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-white/50 shadow-sm hover:shadow-md transition-all duration-300">
-                  <div className="flex-shrink-0 w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                <motion.div 
+                  key={index} 
+                  className="flex items-start gap-3 p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-white/50 shadow-sm hover:shadow-md transition-all duration-300"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.8 + index * 0.1 }}
+                  whileHover={{ 
+                    scale: 1.02,
+                    y: -2,
+                    transition: { duration: 0.2 }
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <motion.div 
+                    className="flex-shrink-0 w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm"
+                    whileHover={{ rotate: 5 }}
+                    transition={{ duration: 0.2 }}
+                  >
                     {benefit.icon}
-                  </div>
+                  </motion.div>
                   <div>
                     <h3 className="font-semibold text-gray-800 mb-1">{benefit.title}</h3>
                     <p className="text-sm text-gray-600">{benefit.description}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
-          </div>
+          </motion.div>
 
           {/* Right side - Why Us section */}
-          <div className="space-y-8">
+          <motion.div 
+            className="space-y-8"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
             {/* Why Us section */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/50">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+            <motion.div 
+              className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/50"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              whileHover={{ 
+                scale: 1.02,
+                transition: { duration: 0.3 }
+              }}
+            >
+              <motion.h3 
+                className="text-2xl font-bold text-gray-800 mb-6 text-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.0 }}
+              >
                 Why Choose Us
-              </h3>
+              </motion.h3>
               
               <div className="space-y-6">
                 {whyUsBenefits.map((benefit, index) => (
-                  <div key={index} className="flex items-start gap-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100 hover:shadow-md transition-all duration-300">
-                    <div className="flex-shrink-0 w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                  <motion.div 
+                    key={index} 
+                    className="flex items-start gap-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100 hover:shadow-md transition-all duration-300"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 1.2 + index * 0.1 }}
+                    whileHover={{ 
+                      scale: 1.02,
+                      x: 5,
+                      transition: { duration: 0.2 }
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <motion.div 
+                      className="flex-shrink-0 w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm"
+                      whileHover={{ 
+                        rotate: 5,
+                        scale: 1.1,
+                        transition: { duration: 0.2 }
+                      }}
+                    >
                       {benefit.icon}
-                    </div>
+                    </motion.div>
                     <div>
                       <h4 className="font-semibold text-gray-800 mb-2">{benefit.title}</h4>
                       <p className="text-gray-600 text-sm leading-relaxed">{benefit.description}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
