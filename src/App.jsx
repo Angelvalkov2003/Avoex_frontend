@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import HomePage from "./pages/HomePage"
-import PrivacyPolicy from "./pages/PrivacyPolicy"
-import TermsOfService from "./pages/TermsOfService"
+// Lazy load pages for better performance
+const HomePage = lazy(() => import("./pages/HomePage"))
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"))
+const TermsOfService = lazy(() => import("./pages/TermsOfService"))
+
+// Loading component
+const LoadingSpinner = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="loading loading-spinner loading-lg text-blue-600"></div>
+  </div>
+)
 
 
 const App = () => {
@@ -33,11 +41,13 @@ const App = () => {
       </div>
       
       <div className="relative z-10">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-        </Routes>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+          </Routes>
+        </Suspense>
       </div>
     </div>
   )

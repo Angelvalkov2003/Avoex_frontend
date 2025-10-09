@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { CheckCircle, Star, Shield, Globe, Users, TrendingUp } from 'lucide-react';
 import { motion } from "framer-motion";
 
-const PersuasionHero = () => {
-  const benefits = [
+const PersuasionHero = memo(() => {
+  // Memoize static data to prevent re-creation on every render
+  const benefits = useMemo(() => [
     {
       icon: <Globe className="w-6 h-6 text-blue-500" />,
       title: "24/7 Online Presence",
@@ -24,9 +25,9 @@ const PersuasionHero = () => {
       title: "Build Trust",
       description: "Modern website builds credibility and professional image"
     }
-  ];
+  ], []);
 
-  const whyUsBenefits = [
+  const whyUsBenefits = useMemo(() => [
     {
       icon: <CheckCircle className="w-6 h-6 text-blue-500" />,
       title: "Free Consultation",
@@ -47,26 +48,24 @@ const PersuasionHero = () => {
       title: "Experienced Team",
       description: "We're suitable for all types of projects because our team consists of experienced programmers."
     }
-  ];
+  ], []);
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1.5 }}
->
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Transparent background to show global gradient */}
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-12">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          
-          {/* Left side - Main content */}
-          <motion.div 
-            className="space-y-8"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
+      transition={{ duration: 0.8 }}
+    >
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-12">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            
+            {/* Left side - Main content */}
+            <motion.div 
+              className="space-y-8"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
             {/* Badge */}
             <motion.div 
               className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full border border-blue-200"
@@ -236,6 +235,7 @@ const PersuasionHero = () => {
     </section>
     </motion.div>
   );
-};
+});
 
+PersuasionHero.displayName = 'PersuasionHero';
 export default PersuasionHero;

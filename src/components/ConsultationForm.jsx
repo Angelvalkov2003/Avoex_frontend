@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, memo, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import api from "../lib/axios";
 import { parseDateTimeInput, convertToBulgarianTime, convertFromBulgarianTime, generateTimeSlots, isUserFromUS, getUserTimezone } from "../lib/utils";
 
-const ConsultationForm = () => {
+const ConsultationForm = memo(() => {
   // Create form states
   const [client, setClient] = useState("");
   const [content, setContent] = useState("");
@@ -16,14 +16,14 @@ const ConsultationForm = () => {
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   
-  // Get user's timezone automatically
-  const userTimezone = getUserTimezone();
+  // Get user's timezone automatically - memoized
+  const userTimezone = useMemo(() => getUserTimezone(), []);
   
-  // Generate time slots based on user's timezone
-  const timeSlots = generateTimeSlots(userTimezone);
+  // Generate time slots based on user's timezone - memoized
+  const timeSlots = useMemo(() => generateTimeSlots(userTimezone), [userTimezone]);
 
-  // Function to load booked slots for a specific date
-  const loadBookedSlots = async (date) => {
+  // Memoized function to load booked slots for a specific date
+  const loadBookedSlots = useCallback(async (date) => {
     if (!date) return;
     
     setLoadingSlots(true);
@@ -42,7 +42,7 @@ const ConsultationForm = () => {
     } finally {
       setLoadingSlots(false);
     }
-  };
+  }, [userTimezone]);
 
   const handleCreateMeeting = async (e) => {
     e.preventDefault();
@@ -162,7 +162,7 @@ const ConsultationForm = () => {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8 }}
+      transition={{ duration: 0.4 }}
     >
       <div className="relative">
         
@@ -172,10 +172,10 @@ const ConsultationForm = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
           whileHover={{ 
             scale: 1.01,
-            transition: { duration: 0.3 }
+            transition: { duration: 0.15 }
           }}
         >
           {/* Header section */}
@@ -184,7 +184,7 @@ const ConsultationForm = () => {
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
           >
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="relative z-10">
@@ -217,7 +217,7 @@ const ConsultationForm = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.6 }}
+            transition={{ duration: 0.3, delay: 0.3 }}
           >
             <form onSubmit={handleCreateMeeting} className="space-y-6">
               {/* Name field */}
@@ -226,7 +226,7 @@ const ConsultationForm = () => {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.8 }}
+                transition={{ duration: 0.25, delay: 0.4 }}
               >
                 <label className="label">
                   <span className="label-text text-lg font-semibold text-gray-700 flex items-center gap-2">
@@ -239,7 +239,7 @@ const ConsultationForm = () => {
                   <input
                     type="text"
                     placeholder="Enter your full name..."
-                    className="input input-bordered w-full h-14 text-lg transition-all duration-300 focus:scale-[1.02] focus:shadow-lg border-2 focus:border-blue-500 bg-white/80 backdrop-blur-sm"
+                    className="input input-bordered w-full h-14 text-lg transition-all duration-150 focus:scale-[1.02] focus:shadow-lg border-2 focus:border-blue-500 bg-white/80 backdrop-blur-sm"
                     value={client}
                     onChange={(e) => setClient(e.target.value)}
                   />
@@ -251,7 +251,7 @@ const ConsultationForm = () => {
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 1.0 }}
+                transition={{ duration: 0.25, delay: 0.5 }}
               >
                 <label className="label">
                   <span className="label-text text-lg font-semibold text-gray-700 flex items-center gap-2">
@@ -263,7 +263,7 @@ const ConsultationForm = () => {
                 </label>
                 <textarea
                   placeholder="Briefly describe what kind of project you would like us to work on..."
-                  className="textarea textarea-bordered w-full h-32 text-lg transition-all duration-300 focus:scale-[1.01] focus:shadow-lg border-2 focus:border-purple-500 bg-white/80 backdrop-blur-sm resize-none"
+                  className="textarea textarea-bordered w-full h-32 text-lg transition-all duration-150 focus:scale-[1.01] focus:shadow-lg border-2 focus:border-purple-500 bg-white/80 backdrop-blur-sm resize-none"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                 />
@@ -275,7 +275,7 @@ const ConsultationForm = () => {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 1.2 }}
+                transition={{ duration: 0.25, delay: 0.6 }}
               >
                 <label className="label">
                   <span className="label-text text-lg font-semibold text-gray-700 flex items-center gap-2">
@@ -288,7 +288,7 @@ const ConsultationForm = () => {
                 <input
                   type="email"
                   placeholder="your.email@example.com"
-                  className="input input-bordered w-full h-14 text-lg transition-all duration-300 focus:scale-[1.02] focus:shadow-lg border-2 focus:border-green-500 bg-white/80 backdrop-blur-sm"
+                  className="input input-bordered w-full h-14 text-lg transition-all duration-150 focus:scale-[1.02] focus:shadow-lg border-2 focus:border-green-500 bg-white/80 backdrop-blur-sm"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -300,7 +300,7 @@ const ConsultationForm = () => {
                  initial={{ opacity: 0, y: 30 }}
                  whileInView={{ opacity: 1, y: 0 }}
                  viewport={{ once: true }}
-                 transition={{ duration: 0.6, delay: 1.4 }}
+                 transition={{ duration: 0.3, delay: 0.7 }}
                >
                  <label className="label">
                    <span className="label-text text-lg font-semibold text-gray-700 flex items-center gap-2">
@@ -325,7 +325,7 @@ const ConsultationForm = () => {
                      <input
                        id="date-input"
                        type="date"
-                       className="input input-bordered w-full h-14 text-lg transition-all duration-300 focus:scale-[1.02] focus:shadow-lg border-2 focus:border-indigo-500 bg-white cursor-pointer"
+                       className="input input-bordered w-full h-14 text-lg transition-all duration-150 focus:scale-[1.02] focus:shadow-lg border-2 focus:border-indigo-500 bg-white cursor-pointer"
                        value={selectedDate}
                        onChange={(e) => {
                          setSelectedDate(e.target.value);
@@ -376,8 +376,8 @@ const ConsultationForm = () => {
                                  type="button"
                                  onClick={() => !isBooked && !isPastTime && setSelectedTime(slot.value)}
                                  disabled={isBooked || isPastTime}
-                                 className={`
-                                   relative p-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:scale-105 active:scale-95
+                                   className={`
+                                   relative p-3 rounded-xl text-sm font-medium transition-all duration-150 transform hover:scale-105 active:scale-95
                                    ${isBooked || isPastTime
                                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed opacity-50'
                                      : isSelected 
@@ -488,11 +488,11 @@ const ConsultationForm = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 1.6 }}
+                transition={{ duration: 0.25, delay: 0.8 }}
               >
                 <button 
                   type="submit" 
-                  className="btn btn-primary w-full h-16 text-lg font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 border-0 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="btn btn-primary w-full h-16 text-lg font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 border-0 text-white shadow-xl hover:shadow-2xl transition-all duration-150 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   disabled={createLoading}
                 >
                   {createLoading ? (
@@ -521,13 +521,13 @@ const ConsultationForm = () => {
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.15 }}
         >
           <motion.div 
             className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl"
             initial={{ opacity: 0, scale: 0.8, y: 50 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.4, type: "spring", stiffness: 300 }}
+            transition={{ duration: 0.2, type: "spring", stiffness: 400 }}
           >
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -552,13 +552,13 @@ const ConsultationForm = () => {
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowConfirmation(false)}
-                  className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                  className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-150"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={confirmBooking}
-                  className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all"
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-150"
                 >
                   Confirm Booking
                 </button>
@@ -569,6 +569,7 @@ const ConsultationForm = () => {
       )}
     </motion.div>
   );
-};
+});
 
+ConsultationForm.displayName = 'ConsultationForm';
 export default ConsultationForm;

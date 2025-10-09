@@ -1,9 +1,9 @@
-import React from "react";
+import React, { memo, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 
-const WorkProcessTree = () => {
-  // Function to smoothly scroll to consultation form
-  const scrollToConsultationForm = () => {
+const WorkProcessTree = memo(() => {
+  // Memoized scroll function
+  const scrollToConsultationForm = useCallback(() => {
     const consultationForm = document.getElementById('consultation-form');
     if (consultationForm) {
       consultationForm.scrollIntoView({
@@ -11,9 +11,10 @@ const WorkProcessTree = () => {
         block: 'start'
       });
     }
-  };
+  }, []);
 
-  const processSteps = [
+  // Memoize process steps to prevent re-creation
+  const processSteps = useMemo(() => [
     {
       id: 1,
       title: "Book Consultation",
@@ -59,7 +60,7 @@ const WorkProcessTree = () => {
       bgColor: "bg-orange-50",
       borderColor: "border-orange-200"
     }
-  ];
+  ], []);
 
   return (
     <motion.div 
@@ -261,6 +262,7 @@ const WorkProcessTree = () => {
       </div>
     </motion.div>
   );
-};
+});
 
+WorkProcessTree.displayName = 'WorkProcessTree';
 export default WorkProcessTree;
