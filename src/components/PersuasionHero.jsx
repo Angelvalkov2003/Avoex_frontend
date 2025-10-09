@@ -57,7 +57,7 @@ const PersuasionHero = () => {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Transparent background to show global gradient */}
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-12">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           
           {/* Left side - Main content */}

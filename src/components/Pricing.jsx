@@ -10,8 +10,8 @@ const Pricing = () => {
   const getPricingForRegion = () => {
     if (region === 'america') {
       return {
-        basic: { price: '300', currency: '$' },
-        booking: { price: '600', currency: '$' },
+        basic: { price: '600', currency: '$' },
+        booking: { price: '1000', currency: '$' },
         maintenance: {
           basic: { price: 15, currency: '$' },
           booking: { price: 30, currency: '$' }
@@ -20,8 +20,8 @@ const Pricing = () => {
     }
     // Европа и останалите региони
     return {
-      basic: { price: '250', currency: '€' },
-      booking: { price: '500', currency: '€' },
+      basic: { price: '500', currency: '€' },
+      booking: { price: '900', currency: '€' },
       maintenance: {
         basic: { price: 12, currency: '€' },
         booking: { price: 24, currency: '€' }
@@ -245,17 +245,44 @@ const Pricing = () => {
           ))}
         </motion.div>
 
-        {/* Hosting Information Box */}
+        {/* Plan Selection Help */}
         <motion.div 
           className="mt-8 max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-300 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center animate-bounce">
+                  <span className="text-green-600 text-lg">💡</span>
+                </div>
+              </div>
+              <p className="text-sm text-gray-700 font-medium">
+                Not sure which plan is right for you? Just call or email us and we'll help you choose the perfect solution for your needs.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Hosting Information Box */}
+        <motion.div 
+          className="mt-6 max-w-2xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-6 border-2 border-blue-300 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
             <div className="text-center">
-              <p className="text-sm text-gray-600">
+              <div className="flex justify-center mb-3">
+                <div className="w-8 h-8 bg-blue-200 rounded-full flex items-center justify-center animate-pulse">
+                  <span className="text-blue-600 text-lg">🌐</span>
+                </div>
+              </div>
+              <p className="text-sm text-gray-700 font-medium">
                 Hosting is selected by the client, but we'll help if you need assistance with this part.
               </p>
             </div>
