@@ -187,6 +187,113 @@ export function combineDateTimeInput(date, time, timezone) {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
+// Check if a date is Monday in Bulgarian timezone
+export function isMondayInBulgarianTime(date) {
+  if (!date) return false;
+
+  // Create a date object from the date string
+  const dateObj = new Date(date);
+
+  // Get the day of the week in Bulgarian timezone
+  const dayOfWeek = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Europe/Sofia",
+    weekday: "long",
+  }).format(dateObj);
+
+  return dayOfWeek === "Monday";
+}
+
+// Check if a date is Wednesday in Bulgarian timezone
+export function isWednesdayInBulgarianTime(date) {
+  if (!date) return false;
+
+  // Create a date object from the date string
+  const dateObj = new Date(date);
+
+  // Get the day of the week in Bulgarian timezone
+  const dayOfWeek = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Europe/Sofia",
+    weekday: "long",
+  }).format(dateObj);
+
+  return dayOfWeek === "Wednesday";
+}
+
+// Check if a date is Friday in Bulgarian timezone
+export function isFridayInBulgarianTime(date) {
+  if (!date) return false;
+
+  // Create a date object from the date string
+  const dateObj = new Date(date);
+
+  // Get the day of the week in Bulgarian timezone
+  const dayOfWeek = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Europe/Sofia",
+    weekday: "long",
+  }).format(dateObj);
+
+  return dayOfWeek === "Friday";
+}
+
+// Generate all blocked time slots based on day of the week
+export function generateBlockedSlots(date, clientTimezone) {
+  if (!date || !clientTimezone) {
+    return [];
+  }
+
+  const blockedSlots = [];
+
+  // Monday: 10:00-15:00 Bulgarian time
+  if (isMondayInBulgarianTime(date)) {
+    for (let hour = 10; hour <= 15; hour++) {
+      const bgTime = `${hour.toString().padStart(2, "0")}:00`;
+      const clientTime = convertFromBulgarianTime(date, bgTime, clientTimezone);
+      if (clientTime.clientTime) {
+        blockedSlots.push(clientTime.clientTime);
+      }
+    }
+  }
+
+  // Wednesday: 07:00-09:00 Bulgarian time
+  if (isWednesdayInBulgarianTime(date)) {
+    for (let hour = 7; hour <= 9; hour++) {
+      const bgTime = `${hour.toString().padStart(2, "0")}:00`;
+      const clientTime = convertFromBulgarianTime(date, bgTime, clientTimezone);
+      if (clientTime.clientTime) {
+        blockedSlots.push(clientTime.clientTime);
+      }
+    }
+  }
+
+  // Friday: 07:00-12:00 Bulgarian time
+  if (isFridayInBulgarianTime(date)) {
+    for (let hour = 7; hour <= 12; hour++) {
+      const bgTime = `${hour.toString().padStart(2, "0")}:00`;
+      const clientTime = convertFromBulgarianTime(date, bgTime, clientTimezone);
+      if (clientTime.clientTime) {
+        blockedSlots.push(clientTime.clientTime);
+      }
+    }
+  }
+
+  // Every day: 17:00 and 18:00 Bulgarian time
+  const dailyBlockedHours = [17, 18];
+  for (const hour of dailyBlockedHours) {
+    const bgTime = `${hour.toString().padStart(2, "0")}:00`;
+    const clientTime = convertFromBulgarianTime(date, bgTime, clientTimezone);
+    if (clientTime.clientTime) {
+      blockedSlots.push(clientTime.clientTime);
+    }
+  }
+
+  return blockedSlots;
+}
+
+// Legacy function for backward compatibility
+export function generateMondayBlockedSlots(date, clientTimezone) {
+  return generateBlockedSlots(date, clientTimezone);
+}
+
 // Format datetime for display in user's local timezone
 export function formatDateTimeForDisplay(dateTimeString) {
   if (!dateTimeString) return "";

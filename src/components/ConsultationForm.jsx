@@ -2,7 +2,7 @@ import React, { useState, memo, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import api from "../lib/axios";
-import { parseDateTimeInput, convertToBulgarianTime, convertFromBulgarianTime, generateTimeSlots, isUserFromUS, getUserTimezone } from "../lib/utils";
+import { parseDateTimeInput, convertToBulgarianTime, convertFromBulgarianTime, generateTimeSlots, isUserFromUS, getUserTimezone, generateBlockedSlots } from "../lib/utils";
 
 const ConsultationForm = memo(() => {
   // Create form states
@@ -31,10 +31,16 @@ const ConsultationForm = memo(() => {
       const response = await api.get(`/meetings/booked-slots/${date}?timezone=${encodeURIComponent(userTimezone)}`);
       const { bookedSlots } = response.data;
       
+      // Generate all blocked slots (Monday, Wednesday, Friday, daily)
+      const blockedSlots = generateBlockedSlots(date, userTimezone);
+      
+      // Combine booked slots from backend with all blocked slots
+      const allBlockedSlots = [...bookedSlots, ...blockedSlots];
+      
       // Store the booked slots directly as they come from the backend in the client's timezone
       setBookedSlots({
-        bgTimes: bookedSlots, // These are already in client timezone from backend
-        clientTimes: bookedSlots
+        bgTimes: allBlockedSlots, // These are already in client timezone from backend
+        clientTimes: allBlockedSlots
       });
     } catch (error) {
       console.error("Error loading booked slots:", error);
