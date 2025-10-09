@@ -157,6 +157,7 @@ const ConsultationForm = () => {
 
   return (
     <motion.div 
+      id="consultation-form"
       className="max-w-4xl mx-auto"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
